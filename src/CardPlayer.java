@@ -9,9 +9,9 @@ public abstract class CardPlayer {
     private boolean _hasExceeded;
     private boolean _hasWon;
 
-    CardPlayer(String playerName) throws Exception {
+    CardPlayer(String playerName) {
         if (playerName == null || playerName.isEmpty())
-            throw new Exception("CardPlayer: argument 'playerName' is null or empty.");
+            _playerName = this.getClass().getName();
 
         _cardDeck = new Vector<>();
         _playerName = playerName;
@@ -32,8 +32,9 @@ public abstract class CardPlayer {
 
     public void showCardDeck() {
         for (Card card : _cardDeck) {
-            card.show();
+            card.showConcise();
         }
+        System.out.println();
     }
 
     public String getPlayerName() {
