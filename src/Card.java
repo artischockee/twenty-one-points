@@ -1,6 +1,4 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 enum Suit {
     DIAMONDS, CLUBS, HEARTS, SPADES;
@@ -74,8 +72,8 @@ enum CardName {
 }
 
 class Card {
-    private Suit _suit;
-    private CardName _cardName;
+    private final Suit _suit;
+    private final CardName _cardName;
     private int _cardWeight;
 
     public String getSuitSymbol() {
@@ -107,6 +105,10 @@ class Card {
     public void show() {
         System.out.printf("%s %s : %s points\n", _cardName.getSymbol(), _suit.getSymbol(), _cardWeight);
     }
+
+    public void showConcise() {
+        System.out.printf("%s%s ", _cardName.getSymbol(), _suit.getSymbol());
+    }
 }
 
 final class CardDeckCreator {
@@ -122,6 +124,10 @@ final class CardDeckCreator {
         WEIGHT_MAP_TWENTY_ONE.put(CardName.NINE, 9);
         WEIGHT_MAP_TWENTY_ONE.put(CardName.TEN, 10);
         WEIGHT_MAP_TWENTY_ONE.put(CardName.ACE, 11);
+    }
+
+    public static Collection<Integer> getWeights21() {
+        return WEIGHT_MAP_TWENTY_ONE.values();
     }
 
     public static Stack<Card> createDeck(int deckSize) throws Exception {
