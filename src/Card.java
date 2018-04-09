@@ -91,6 +91,10 @@ class Card {
     }
 
     Card(Suit suit, CardName cardName, int cardWeight) throws Exception {
+        if (suit == null || cardName == null)
+            throw new NullPointerException("Card: null "
+                    + Suit.class.getName() + " or "
+                    + CardName.class.getName() + " argument.");
         if (cardWeight <= 0)
             throw new Exception("Error in argument 'cardWeight': negative value.");
         // TODO: 4/6/18 here should probably be another arguments checking
@@ -101,7 +105,7 @@ class Card {
     }
 
     public void show() {
-        System.out.printf("%s : %s (%s) : %s points\n", _cardName.getSymbol(), _suit.getSymbol(), _suit, _cardWeight);
+        System.out.printf("%s %s : %s points\n", _cardName.getSymbol(), _suit.getSymbol(), _cardWeight);
     }
 }
 
