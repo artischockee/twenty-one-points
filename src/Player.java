@@ -17,34 +17,44 @@ public class Player extends CardPlayer {
     }
 
     @Override
-    public TurnAnswer analyzeTurn() throws Exception {
-        String playerName = getPlayerName();
-        int pointsAmount = getPointsAmount();
-
-        if (pointsAmount > TwentyOnePoints.MAX_SCORE) {
-            setExceed(true);
-        }
+    public TurnStatement analyzeTurn() {
+        String playerName = this.getPlayerName();
+        int pointsAmount = this.getPointsAmount();
 
         System.out.println(playerName + ", so far you have " + pointsAmount + " points.");
-        if (hasExceeded()) {
+        this.showCardDeck();
+
+        if (pointsAmount > TwentyOnePoints.MAX_SCORE) {
             System.out.println("You have exceeded the maximum score. Sorry, you lost.");
-            return TurnAnswer.PASS; // bad shit
+            return TurnStatement.EXCEED;
         }
-        // TODO: 4/6/18 if Player is Dealer and has 17 or more points, warn him and restrict to take cards from the deck
-        showCardDeck();
-        System.out.println("What are you gonna do?");
+        else if (pointsAmount == TwentyOnePoints.MAX_SCORE) {
+            System.out.println("You have earned 21 points! Congratulations!");
+            return TurnStatement.WIN;
+        }
+
+        if (this.isDealer() && pointsAmount >= TwentyOnePoints.MAX_DEALER_TOTAL) {
+            System.out.println("Since you are the dealer in this game, and you have "
+                + pointsAmount + " points (minimum is "
+                + TwentyOnePoints.MAX_DEALER_TOTAL + "), you are not able to take cards from the deck anymore.");
+            return TurnStatement.STAND;
+        }
+
         System.out.println("1) Take one more card from the deck");
         System.out.println("2) Pass the turn and wait for results");
 
         Scanner scanner = new Scanner(System.in);
-        int answer = scanner.nextInt();
-        switch (answer) {
-            case 1:
-                return TurnAnswer.TAKE;
-            case 2:
-                return TurnAnswer.PASS;
-            default:
-                throw new Exception("Only 2 options are available.");
-        }
+        int answer;
+        do {
+            answer = scanner.nextInt();
+            switch (answer) {
+                case 1:
+                    return TurnStatement.HIT;
+                case 2:
+                    return TurnStatement.STAND;
+                default:
+                    System.out.println("Please choose valid option.");
+            }
+        } while (true);
     }
 }
