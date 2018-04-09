@@ -3,9 +3,11 @@ import java.util.Vector;
 public abstract class CardPlayer {
     private Vector<Card> _cardDeck;
     private String _playerName;
+
     private boolean _isDealer;
     private boolean _hasPassed;
     private boolean _hasExceeded;
+    private boolean _hasWon;
 
     CardPlayer(String playerName) throws Exception {
         if (playerName == null || playerName.isEmpty())
@@ -13,7 +15,7 @@ public abstract class CardPlayer {
 
         _cardDeck = new Vector<>();
         _playerName = playerName;
-        _isDealer = _hasPassed = _hasExceeded = false;
+        _isDealer = _hasPassed = _hasExceeded = _hasWon = false;
     }
 
     public int getPointsAmount() {
@@ -62,7 +64,15 @@ public abstract class CardPlayer {
         _hasExceeded = state;
     }
 
+    public boolean hasWon() {
+        return _hasWon;
+    }
+
+    public void setWin(boolean state) {
+        _hasWon = state;
+    }
+
     public abstract int getPlayerIndex();
 
-    public abstract TurnAnswer analyzeTurn() throws Exception ;
+    public abstract TurnStatement analyzeTurn() throws Exception;
 }
