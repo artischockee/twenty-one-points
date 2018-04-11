@@ -1,3 +1,5 @@
+package model;
+
 import java.util.Scanner;
 
 public class Player extends CardPlayer {
@@ -7,7 +9,7 @@ public class Player extends CardPlayer {
         _playerIndex = 0;
     }
 
-    Player() throws Exception {
+    Player() {
         super("Player " + ++_playerIndex);
     }
 

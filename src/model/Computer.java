@@ -1,3 +1,5 @@
+package model;
+
 import java.util.Random;
 
 public class Computer extends CardPlayer {
@@ -7,7 +9,7 @@ public class Computer extends CardPlayer {
         _computerIndex = 0;
     }
 
-    Computer() throws Exception {
+    Computer() {
         super("Computer " + ++_computerIndex);
     }
 

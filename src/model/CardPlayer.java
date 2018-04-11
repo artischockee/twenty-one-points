@@ -1,3 +1,5 @@
+package model;
+
 import java.util.Vector;
 
 public abstract class CardPlayer {
@@ -75,5 +77,5 @@ public abstract class CardPlayer {
 
     public abstract int getPlayerIndex();
 
-    public abstract TurnStatement analyzeTurn() throws Exception;
+    public abstract TurnStatement analyzeTurn();
 }
