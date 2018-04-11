@@ -3,29 +3,44 @@ package view;
 import java.awt.*;
 
 public class GBConstraints extends GridBagConstraints {
-    private int _gridX;
-    private int _gridY;
+    public static final int X = 0;
+    public static final int Y = 1;
 
     GBConstraints(int fill) {
         if (fill < GridBagConstraints.NONE || fill > GridBagConstraints.VERTICAL)
             throw new IllegalArgumentException();
 
         this.fill = fill;
-
-        _gridX = 0;
-        _gridY = 0;
+        this.gridx = 0;
+        this.gridy = 0;
+        this.weightx = 0;
+        this.weighty = 0;
     }
 
-    public void assembly(Insets insets) {
-        if (insets == null)
-            throw new IllegalArgumentException();
-
-        this.assembly();
+    public void assembly(int direction, Insets insets) {
+        this.assembly(direction);
         this.insets = insets;
     }
 
-    public void assembly() {
-        this.gridx = _gridX;
-        this.gridy = _gridY++;
+    public void assembly(int direction) {
+        switch (direction) {
+            case X:
+                this.gridx++;
+                break;
+            case Y:
+                this.gridy++;
+                break;
+        }
+    }
+
+    public void assembly(Insets insets) {
+        this.insets = insets;
+    }
+
+    public void reset() {
+        this.gridx = 0;
+        this.gridy = 0;
+        this.weightx = 0;
+        this.weighty = 0;
     }
 }
