@@ -34,22 +34,22 @@ public class Computer extends CardPlayer {
         String playerName = this.getPlayerName();
         int pointsAmount = this.getPointsAmount();
 
-        if (pointsAmount > TwentyOnePoints.MAX_SCORE) {
+        if (pointsAmount > GameModel.MAX_SCORE) {
             System.out.println(playerName + " has exceeded the maximum score. It's lost.");
             return TurnStatement.EXCEED;
         }
-        else if (pointsAmount == TwentyOnePoints.MAX_SCORE) {
+        else if (pointsAmount == GameModel.MAX_SCORE) {
             System.out.println(playerName + " has earned 21 points!");
             return TurnStatement.WIN;
         }
 
-        if (this.isDealer() && pointsAmount >= TwentyOnePoints.MAX_DEALER_TOTAL)
+        if (this.isDealer() && pointsAmount >= GameModel.MAX_DEALER_TOTAL)
             return TurnStatement.STAND;
 
         // Below is the main decision determination:
 
-        int upperBound = TwentyOnePoints.MAX_SCORE - TwentyOnePoints.MIN_WEIGHT + 1;
-        int lowerBound = TwentyOnePoints.MAX_SCORE - TwentyOnePoints.MAX_WEIGHT;
+        int upperBound = GameModel.MAX_SCORE - GameModel.MIN_WEIGHT + 1;
+        int lowerBound = GameModel.MAX_SCORE - GameModel.MAX_WEIGHT;
 
         if (pointsAmount == upperBound)
             return TurnStatement.STAND;

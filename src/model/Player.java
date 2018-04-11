@@ -26,19 +26,19 @@ public class Player extends CardPlayer {
         System.out.println(playerName + ", so far you have " + pointsAmount + " points.");
         this.showCardDeck();
 
-        if (pointsAmount > TwentyOnePoints.MAX_SCORE) {
+        if (pointsAmount > GameModel.MAX_SCORE) {
             System.out.println("You have exceeded the maximum score. Sorry, you lost.");
             return TurnStatement.EXCEED;
         }
-        else if (pointsAmount == TwentyOnePoints.MAX_SCORE) {
+        else if (pointsAmount == GameModel.MAX_SCORE) {
             System.out.println("You have earned 21 points! Congratulations!");
             return TurnStatement.WIN;
         }
 
-        if (this.isDealer() && pointsAmount >= TwentyOnePoints.MAX_DEALER_TOTAL) {
+        if (this.isDealer() && pointsAmount >= GameModel.MAX_DEALER_TOTAL) {
             System.out.println("Since you are the dealer in this game, and you have "
                 + pointsAmount + " points (minimum is "
-                + TwentyOnePoints.MAX_DEALER_TOTAL + "), you are not able to take cards from the deck anymore.");
+                + GameModel.MAX_DEALER_TOTAL + "), you are not able to take cards from the deck anymore.");
             return TurnStatement.STAND;
         }
 
