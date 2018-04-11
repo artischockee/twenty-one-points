@@ -1,3 +1,5 @@
+package model;
+
 import java.util.*;
 
 public class TwentyOnePoints {
@@ -16,32 +18,25 @@ public class TwentyOnePoints {
     private Stack<Card> _cardDeck;
     private Vector<CardPlayer> _cardPlayers;
 
-    TwentyOnePoints() throws Exception {
+    public TwentyOnePoints() throws Exception {
         _cardDeck = CardDeckCreator.createDeck(DECK_SIZE);
         _cardPlayers = new Vector<>();
     }
 
-    // TEMP!
-    public void getCardFromDeck() {
-        _cardDeck.pop();
+    // temp:
+    public Card getCard() {
+        return _cardDeck.pop();
     }
 
     public int getCardDeckSize() {
         return _cardDeck.size();
     }
 
-    public void displayDeck() {
-        for (Card card : _cardDeck)
-            card.show();
-    }
-
     private void shuffleDeck() {
-//        System.out.print("Shuffling the deck.. ");
         Collections.shuffle(_cardDeck);
-//        System.out.println("Success.");
     }
 
-    private void performPlayerActions(CardPlayer player) throws Exception {
+    private void performPlayerActions(CardPlayer player) {
         while (!player.hasPassed()
                 && !player.hasExceeded()
                 && !player.hasWon()) {
@@ -64,7 +59,29 @@ public class TwentyOnePoints {
         }
     }
 
-    public void playGame() throws Exception {
+    private void firstCardDistribution() {
+        for (CardPlayer cardPlayer : _cardPlayers) {
+            // TODO: 4/6/18 add exception handling in case of cardDeck is empty
+            cardPlayer.addCard(_cardDeck.pop());
+        }
+    }
+
+    public void launchGameGui() {
+        this.shuffleDeck();
+
+        _cardPlayers.add(new Computer());
+        _cardPlayers.add(new Player());
+        _cardPlayers.elementAt(0).setDealer(true);
+
+        this.firstCardDistribution();
+
+        for (CardPlayer cardPlayer : _cardPlayers) {
+            if (!cardPlayer.isDealer())
+                performPlayerActions(cardPlayer);
+        }
+    }
+
+    public void playGame() {
         System.out.println("Hello and welcome to 'Twenty One Points' game!");
         shuffleDeck();
         System.out.println("You will be playing against computer. He (it) will be a dealer (for now).");
@@ -74,11 +91,7 @@ public class TwentyOnePoints {
         // add new cardPlayers (probably, Computers) here
         _cardPlayers.elementAt(0).setDealer(true);
 
-        // first card distribution
-        for (CardPlayer cardPlayer : _cardPlayers) {
-            // TODO: 4/6/18 add exception handling in case of cardDeck is empty
-            cardPlayer.addCard(_cardDeck.pop());
-        }
+        this.firstCardDistribution();
 
         // Here are the regular players play
         for (CardPlayer cardPlayer : _cardPlayers) {
