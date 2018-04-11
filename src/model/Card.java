@@ -1,3 +1,5 @@
+package model;
+
 import java.util.*;
 
 enum Suit {
@@ -71,13 +73,17 @@ enum CardName {
     }
 }
 
-class Card {
+public class Card {
     private final Suit _suit;
     private final CardName _cardName;
     private int _cardWeight;
 
     public String getSuitSymbol() {
         return _suit.getSymbol();
+    }
+
+    public String getSuitShortNotation() {
+        return _suit.getShortNotation();
     }
 
     public String getCardNameSymbol() {
@@ -90,7 +96,7 @@ class Card {
 
     Card(Suit suit, CardName cardName, int cardWeight) throws Exception {
         if (suit == null || cardName == null)
-            throw new NullPointerException("Card: null "
+            throw new NullPointerException("model.Card: null "
                     + Suit.class.getName() + " or "
                     + CardName.class.getName() + " argument.");
         if (cardWeight <= 0)
@@ -131,7 +137,7 @@ final class CardDeckCreator {
     }
 
     public static Stack<Card> createDeck(int deckSize) throws Exception {
-        if (deckSize != TwentyOnePoints.DECK_SIZE) {
+        if (deckSize != model.TwentyOnePoints.DECK_SIZE) {
             throw new Exception("There is no suitable deck size for the specified number.");
             // TODO: 4/6/18 this is probably a blank for further improvements (e.g. different deck size)
         }
