@@ -1,8 +1,6 @@
 # Twenty-One Points
 Game "Twenty-One Points" (russian version) with Graphical User Interface
 
-![Card set of Aces](/images/card_sets/aces.png)
-
 ## Description
 From [Wikipedia](https://en.wikipedia.org/wiki/Blackjack):
 > Blackjack, also known as twenty-one, is a comparing card game between usually several players and a dealer, where each player in turn competes against the dealer, but players do not play against each other. It is played with one or more decks of 52 cards, and is the most widely played casino banking game in the world.
@@ -14,9 +12,9 @@ The main difference between original blackjack and "twenty-one points" (i.e. rus
 Because of that, the cards like Jack (J), Queen (Q) and King (K) have their weight not 10, but 2, 3 and 4 accordingly. The Ace (A) has his total weight of 11. Another cards have their weight by the numbering.
 
 ## Goals
-- [ ] Write basic business logic (it is not completed yet)
+- [x] Write basic Model's logic
 - [ ] Make an interaction for players's table
-- [ ] Unite the model and the view using controller
+- [ ] Unite the Model and the View using Controller
 
 ## Disclaimer
 The author **doesn't** appreciate gambling, so the development of this program wasn't in his plans. It was a customer's desire. But anyway, this development gave the author the new experience in programming. The author was honestly trying (and he still tries) to make a good, handy design of the program, therefore please, give your feedback. Thank you!
