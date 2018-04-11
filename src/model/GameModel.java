@@ -2,7 +2,7 @@ package model;
 
 import java.util.*;
 
-public class TwentyOnePoints {
+public class GameModel {
     public static final int DECK_SIZE = 36;
     public static final int MAX_SCORE = 21;
     public static final int MAX_DEALER_TOTAL = 17;
@@ -18,18 +18,31 @@ public class TwentyOnePoints {
     private Stack<Card> _cardDeck;
     private Vector<CardPlayer> _cardPlayers;
 
-    public TwentyOnePoints() throws Exception {
+    public GameModel() throws IllegalArgumentException {
         _cardDeck = CardDeckCreator.createDeck(DECK_SIZE);
         _cardPlayers = new Vector<>();
-    }
 
-    // temp:
-    public Card getCard() {
-        return _cardDeck.pop();
+//        this.initialActions();
     }
 
     public int getCardDeckSize() {
         return _cardDeck.size();
+    }
+
+    public CardPlayer getCardPlayer(int playerIndex) {
+        // <- argument checking
+
+        return _cardPlayers.elementAt(playerIndex);
+    }
+
+    public Vector<Card> getPlayerDeck(int playerIndex) {
+        // <- argument checking
+
+        return _cardPlayers.elementAt(playerIndex).getCardDeck();
+    }
+
+    public Stack<Card> getCardDeck() {
+        return _cardDeck;
     }
 
     private void shuffleDeck() {
@@ -66,7 +79,7 @@ public class TwentyOnePoints {
         }
     }
 
-    public void launchGameGui() {
+    public void initialActions() {
         this.shuffleDeck();
 
         _cardPlayers.add(new Computer());
@@ -74,11 +87,6 @@ public class TwentyOnePoints {
         _cardPlayers.elementAt(0).setDealer(true);
 
         this.firstCardDistribution();
-
-        for (CardPlayer cardPlayer : _cardPlayers) {
-            if (!cardPlayer.isDealer())
-                performPlayerActions(cardPlayer);
-        }
     }
 
     public void playGame() {
