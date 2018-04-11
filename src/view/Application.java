@@ -4,7 +4,6 @@ import model.*;
 import controller.Controller;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -49,10 +48,15 @@ public class Application extends JFrame {
     private JButton _playButton;
     private JButton _exitButton;
 
-    private JButton _initialButton;
+    // Initial window:
+    private JPanel _initPanel;
+    private JLabel _initGreetingsLabel;
+    private JLabel _initPictureLabel;
+    private JButton _initLaunchButton;
+    private JButton _initExitButton;
 
 
-    // Constructor(s):
+    // Constructor:
 
     public Application(GameModel model) throws IllegalArgumentException {
         super("21 Points - The Game");
@@ -64,73 +68,31 @@ public class Application extends JFrame {
 
         _model = model;
 
-        _mainPanel = createPanel(
+        _mainPanel = GuiCreator.createPanel(
                 new GridBagLayout(),
                 new Dimension(_frameWidth, _frameHeight),
                 new EmptyBorder(_gridGap, _gridGap, _gridGap, _gridGap));
         _mainPanel.setMaximumSize(new Dimension(_frameWidth, _frameHeight));
 
-        _menuBar = new JMenuBar();
-        _gameMenu = new JMenu("Game");
-        _playGameMenuItem = new JMenuItem("Play Game");
-        _exitGameMenuItem = new JMenuItem("Exit");
-        _helpMenu = new JMenu("Help");
-        _aboutMenuItem = new JMenuItem("About");
+        this.assembleMenuBar();
+        this.assembleInnerPanels();
 
-        _leftPanel = createPanel(
-                new GridLayout(2, 1),
-                null,
-                null);
-
-        _rightPanel = createPanel(
-                new GridBagLayout(),
-                null,
-                BorderFactory.createTitledBorder("The Deck"));
-
-        _bottomPanel = createPanel(
-                new FlowLayout(FlowLayout.CENTER),
-                null,
-                null);
-
-        _topLeftPanel = createPanel(
-                null,
-                null,
-                BorderFactory.createTitledBorder("Dealer's hands"));
-        _topLeftPanel.setLayout(new BoxLayout(_topLeftPanel, BoxLayout.PAGE_AXIS));
-
-        _bottomLeftPanel = createPanel(
-                null,
-                null,
-                BorderFactory.createTitledBorder("Player's hands"));
-        _bottomLeftPanel.setLayout(new BoxLayout(_bottomLeftPanel, BoxLayout.PAGE_AXIS));
-
-        _dealerPane = createLayeredPane(
+        _dealerPane = GuiCreator.createLayeredPane(
                 new Dimension(_topLeftPanel.getWidth(), _topLeftPanel.getHeight()),
                 Component.CENTER_ALIGNMENT
         );
 
-        _playerPane = createLayeredPane(
+        _playerPane = GuiCreator.createLayeredPane(
                 new Dimension(_bottomLeftPanel.getWidth(), _bottomLeftPanel.getHeight()),
                 Component.CENTER_ALIGNMENT
         );
 
-        _dealerTotalPtsLabel = createLabel("Dealer's total points: 0",
-                JLabel.CENTER, new Font("Roboto", Font.PLAIN, 12));
-        _dealerTotalPtsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        _playerTotalPtsLabel = createLabel("Total points: 0",
-                JLabel.CENTER, new Font("Roboto", Font.PLAIN, 12));
-        _playerTotalPtsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        _cardDeckSizeLabel = new JLabel(Integer.toString(_model.getCardDeckSize()) + " cards");
-        _cardDeckSizeLabel.setFont(new Font("Roboto", Font.BOLD, 32));
+        this.assembleInnerLabels();
 
         _cardDeckButton = new JButton(new ImageIcon("images/card_back/green_back.png"));
 
         _playButton = new JButton("Play");
         _exitButton = new JButton("Exit");
-
-        _initialButton = new JButton("Launch");
 
         this.initialWindowAssembly();
 
@@ -145,8 +107,8 @@ public class Application extends JFrame {
         return _mainPanel;
     }
 
-    public JButton getInitialButton() {
-        return _initialButton;
+    public JPanel getInitialPanel() {
+        return _initPanel;
     }
 
 
@@ -156,48 +118,51 @@ public class Application extends JFrame {
         _cardDeckSizeLabel.setText(Integer.toString(_model.getCardDeckSize()) + " cards");
     }
 
-    private JLabel createLabel(String text, int horizontalAlignment, Font font) {
-        // TODO: 4/10/18 Check arguments
+    private void assembleInnerLabels() {
+        _dealerTotalPtsLabel = GuiCreator.createLabel("Dealer's total points: 0",
+                JLabel.CENTER, new Font("Roboto", Font.PLAIN, 12));
+        _dealerTotalPtsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel label = new JLabel(text, horizontalAlignment);
-        label.setFont(font);
+        _playerTotalPtsLabel = GuiCreator.createLabel("Total points: 0",
+                JLabel.CENTER, new Font("Roboto", Font.PLAIN, 12));
+        _playerTotalPtsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        return label;
-    }
-
-    private JPanel createPanel(LayoutManager layout, Dimension preferredSize, Border border) {
-        JPanel panel = new JPanel();
-
-        if (layout != null)
-            panel.setLayout(layout);
-        if (preferredSize != null)
-            panel.setPreferredSize(preferredSize);
-        if (border != null)
-            panel.setBorder(border);
-
-        return panel;
-    }
-
-    private JLayeredPane createLayeredPane(Dimension dimension, float alignmentX) {
-        JLayeredPane layeredPane = new JLayeredPane();
-        layeredPane.setPreferredSize(dimension);
-        layeredPane.setAlignmentX(alignmentX);
-
-        return layeredPane;
+        _cardDeckSizeLabel = new JLabel(Integer.toString(_model.getCardDeckSize()) + " cards");
+        _cardDeckSizeLabel.setFont(new Font("Roboto", Font.BOLD, 32));
     }
 
     private void assembleInnerPanels() {
-        // every inner panel
+        _leftPanel = GuiCreator.createPanel(new GridLayout(2, 1));
+
+        _rightPanel = GuiCreator.createPanel(
+                new GridBagLayout(),
+                BorderFactory.createTitledBorder("The Deck"));
+
+        _bottomPanel = GuiCreator.createPanel(new FlowLayout(FlowLayout.CENTER));
+
+        _topLeftPanel = GuiCreator.createPanel(BorderFactory.createTitledBorder("Dealer's hands"));
+        _topLeftPanel.setLayout(new BoxLayout(_topLeftPanel, BoxLayout.PAGE_AXIS));
+
+        _bottomLeftPanel = GuiCreator.createPanel(BorderFactory.createTitledBorder("Player's hands"));
+        _bottomLeftPanel.setLayout(new BoxLayout(_bottomLeftPanel, BoxLayout.PAGE_AXIS));
     }
 
     private void assembleMenuBar() {
+        _menuBar = new JMenuBar();
+
+        _gameMenu = new JMenu("Game");
         _gameMenu.setMnemonic(KeyEvent.VK_G);
 
+        _playGameMenuItem = new JMenuItem("Play Game");
         _playGameMenuItem.setActionCommand(Controller.ButtonClickListener.PLAY_GAME);
+
+        _exitGameMenuItem = new JMenuItem("Exit");
         _exitGameMenuItem.setActionCommand(Controller.ButtonClickListener.EXIT_GAME);
 
+        _helpMenu = new JMenu("Help");
         _helpMenu.setMnemonic(KeyEvent.VK_H);
 
+        _aboutMenuItem = new JMenuItem("About");
         _aboutMenuItem.setActionCommand(Controller.ButtonClickListener.ABOUT);
 
         // Assembling the elements:
@@ -212,62 +177,47 @@ public class Application extends JFrame {
         this.setJMenuBar(_menuBar);
     }
 
-    public void initialWindowAssembly() {
-        this.assembleMenuBar();
+    private void initialWindowAssembly() {
+        _initPanel = new JPanel();
+        _initPanel.setLayout(new GridBagLayout());
 
-        // main panel
-        // initial button
+        _initGreetingsLabel = new JLabel("Welcome to Twenty-One Points Game!");
+        _initGreetingsLabel.setFont(new Font("Roboto", Font.BOLD, 16));
 
-        _initialButton.setActionCommand(Controller.ButtonClickListener.LAUNCH_APP);
+        _initPictureLabel = new JLabel(new ImageIcon("images/favicon.png"), JLabel.CENTER);
 
-        _mainPanel.add(_initialButton);
+        _initLaunchButton = new JButton("Launch game");
+        _initLaunchButton.setActionCommand(Controller.ButtonClickListener.LAUNCH_APP);
+
+        _initExitButton = new JButton("Exit");
+        _initExitButton.setActionCommand(Controller.ButtonClickListener.EXIT_GAME);
+
+        GBConstraints gbc = new GBConstraints(GridBagConstraints.BOTH);
+
+        gbc.assembly(GBConstraints.Y, new Insets(0, 0, 32, 0));
+        _initPanel.add(_initGreetingsLabel, gbc);
+
+        gbc.assembly(GBConstraints.Y);
+        _initPanel.add(_initPictureLabel, gbc);
+
+        gbc.assembly(GBConstraints.Y, new Insets(16, 0, 0, 0));
+        _initPanel.add(_initLaunchButton, gbc);
+
+        gbc.assembly(GBConstraints.Y, new Insets(4, 0, 0, 0));
+        _initPanel.add(_initExitButton, gbc);
+
+        _mainPanel.add(_initPanel);
     }
 
     public void windowAssembly() {
-//        this.assembleInnerPanels();
+        GBConstraints gbc = new GBConstraints(GridBagConstraints.VERTICAL);
 
-        // dealer pane
-
-        // player pane
-
-        // playertotalptslabel
-
-//        _playerTotalPtsLabel.addPropertyChangeListener(
-//                propertyChangeEvent -> _playerTotalPtsLabel.setText(
-//                        "Total points: " + _model.getCardPlayer(1).getPointsAmount()));
-
-        // dealertotalptslabel
-
-//        _dealerTotalPtsLabel.addPropertyChangeListener(
-//                propertyChangeEvent -> _dealerTotalPtsLabel.setText(
-//                        "Total points: " + _model.getCardPlayer(0).getPointsAmount()));
-
-        // carddeckbutton
-
-//        cardDeckButton.addActionListener(new Controller(
-//        _playerPane,
-//        _model.getCardPlayer(1).getCardDeck(),
-//        _model.getCardDeck()));
-
-        // Everything about right panel:
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.VERTICAL;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
         _rightPanel.add(_cardDeckButton, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-
+        gbc.assembly(GBConstraints.Y);
         _rightPanel.add(_cardDeckSizeLabel, gbc);
 
-        // Bottom panel:
-
-        // playbutton
+        // For bottom panel:
         _playButton.setActionCommand(Controller.ButtonClickListener.PLAY_GAME);
-
-        // exitbutton
         _exitButton.setActionCommand(Controller.ButtonClickListener.EXIT_GAME);
 
         // Adding the elements:
@@ -283,35 +233,29 @@ public class Application extends JFrame {
         _bottomPanel.add(_playButton);
         _bottomPanel.add(_exitButton);
 
+        gbc.reset();
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.weighty = 1.0;
         gbc.weightx = 1.0;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-
+        gbc.weighty = 1.0;
         _mainPanel.add(_leftPanel, gbc);
 
         gbc.weightx = 0.5;
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-
+        gbc.weighty = 1.0;
+        gbc.assembly(GBConstraints.X);
         _mainPanel.add(_rightPanel, gbc);
 
-        gbc.weightx = 0.0;
-        gbc.weighty = 0.0;
-        gbc.gridx = 0;
+        gbc.reset();
+        gbc.assembly(GBConstraints.Y);
         gbc.gridwidth = 2;
-        gbc.gridy = 1;
-
         _mainPanel.add(_bottomPanel, gbc);
 
         this.setContentPane(_mainPanel);
         this.pack();
-//        this.setVisible(true);
     }
 
     public void addButtonClickListener(ActionListener actionListener) {
-        _initialButton.addActionListener(actionListener);
+        _initLaunchButton.addActionListener(actionListener);
+        _initExitButton.addActionListener(actionListener);
         _playGameMenuItem.addActionListener(actionListener);
         _exitGameMenuItem.addActionListener(actionListener);
         _aboutMenuItem.addActionListener(actionListener);
