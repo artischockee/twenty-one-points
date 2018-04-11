@@ -94,13 +94,14 @@ public class Card {
         return _cardWeight;
     }
 
-    Card(Suit suit, CardName cardName, int cardWeight) throws Exception {
+    Card(Suit suit, CardName cardName, int cardWeight) throws NullPointerException, IllegalArgumentException {
         if (suit == null || cardName == null)
-            throw new NullPointerException("model.Card: null "
-                    + Suit.class.getName() + " or "
-                    + CardName.class.getName() + " argument.");
+            throw new NullPointerException(
+                this.getClass().getName() + ": null "
+                + Suit.class.getName() + " or "
+                + CardName.class.getName() + " argument.");
         if (cardWeight <= 0)
-            throw new Exception("Error in argument 'cardWeight': negative value.");
+            throw new IllegalArgumentException("Error in argument 'cardWeight': negative value.");
         // TODO: 4/6/18 here should probably be another arguments checking
 
         _suit = suit;
@@ -136,17 +137,23 @@ final class CardDeckCreator {
         return WEIGHT_MAP_TWENTY_ONE.values();
     }
 
-    public static Stack<Card> createDeck(int deckSize) throws Exception {
-        if (deckSize != model.TwentyOnePoints.DECK_SIZE) {
-            throw new Exception("There is no suitable deck size for the specified number.");
-            // TODO: 4/6/18 this is probably a blank for further improvements (e.g. different deck size)
+    public static Stack<Card> createDeck(int deckSize) throws IllegalArgumentException {
+        if (deckSize != GameModel.DECK_SIZE) {
+            throw new IllegalArgumentException("There is no suitable deck size for the specified number.");
+            // This is probably a blank for further improvements (e.g. different deck size)
         }
 
         Stack<Card> deck = new Stack<>();
 
         for (CardName cardName: CardName.values())
-            for (Suit suit: Suit.values())
-                deck.add(new Card(suit, cardName, WEIGHT_MAP_TWENTY_ONE.get(cardName)));
+            for (Suit suit: Suit.values()) {
+                try {
+                    deck.add(new Card(suit, cardName, WEIGHT_MAP_TWENTY_ONE.get(cardName)));
+                }
+                catch (NullPointerException | IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
+            }
 
         return deck;
     }
