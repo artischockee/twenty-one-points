@@ -20,6 +20,10 @@ public abstract class CardPlayer {
         _isDealer = _hasPassed = _hasExceeded = _hasWon = false;
     }
 
+    public Vector<Card> getCardDeck() {
+        return _cardDeck;
+    }
+
     public int getPointsAmount() {
         int pointsAmount = 0;
         for (Card card : _cardDeck)
