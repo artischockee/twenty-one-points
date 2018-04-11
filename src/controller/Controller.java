@@ -45,7 +45,7 @@ public class Controller {
                     System.exit(0);
                     break;
                 case LAUNCH_APP:
-                    _view.getMainPanel().remove(_view.getInitialButton());
+                    _view.getMainPanel().remove(_view.getInitialPanel());
                     _view.windowAssembly();
                     break;
                 case ABOUT:
