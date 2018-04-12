@@ -21,8 +21,6 @@ public class GameModel {
     public GameModel() throws IllegalArgumentException {
         _cardDeck = CardDeckCreator.createDeck(DECK_SIZE);
         _cardPlayers = new Vector<>();
-
-//        this.initialActions();
     }
 
     public int getCardDeckSize() {
@@ -47,6 +45,8 @@ public class GameModel {
 
     private void shuffleDeck() {
         Collections.shuffle(_cardDeck);
+
+        System.out.println("shuffleDeck - ok");
     }
 
     private void performPlayerActions(CardPlayer player) {
@@ -77,6 +77,8 @@ public class GameModel {
             // TODO: 4/6/18 add exception handling in case of cardDeck is empty
             cardPlayer.addCard(_cardDeck.pop());
         }
+
+        System.out.println("firstCardDistribution - ok");
     }
 
     public void initialActions() {
@@ -87,19 +89,12 @@ public class GameModel {
         _cardPlayers.elementAt(0).setDealer(true);
 
         this.firstCardDistribution();
+
+        System.out.println("initialActions - ok");
     }
 
     public void playGame() {
-        System.out.println("Hello and welcome to 'Twenty One Points' game!");
-        shuffleDeck();
-        System.out.println("You will be playing against computer. He (it) will be a dealer (for now).");
-
-        _cardPlayers.add(new Computer());
-        _cardPlayers.add(new Player());
-        // add new cardPlayers (probably, Computers) here
-        _cardPlayers.elementAt(0).setDealer(true);
-
-        this.firstCardDistribution();
+//        this.initialActions();
 
         // Here are the regular players play
         for (CardPlayer cardPlayer : _cardPlayers) {
