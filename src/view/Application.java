@@ -45,12 +45,18 @@ public class Application extends JFrame {
     private JLabel _playerTotalStaticLabel;
     private JLabel _playerTotalPtsLabel;
 
+    // Make these attributes for separated class that extends JLayeredPane:
+    private int _dealerPaneBoundX;
+    private int _dealerPaneBoundY;
     private int _playerPaneBoundX;
     private int _playerPaneBoundY;
-    private int _playerPaneOffset;
+    private final int _cardPlayerPaneOffset = 30;
+    private int _dealerPaneLayerPosition;
     private int _playerPaneLayerPosition;
 
     private JButton _cardDeckButton;
+    private JPanel _cardDeckSizePanel;
+    private JLabel _cardDeckStaticLabel;
     private JLabel _cardDeckSizeLabel;
 
     // Bottom control panel:
@@ -98,10 +104,9 @@ public class Application extends JFrame {
                 Component.CENTER_ALIGNMENT
         );
 
-        _playerPaneBoundX = 0;
-        _playerPaneBoundY = 0;
-        _playerPaneOffset = 30;
-        _playerPaneLayerPosition = 0;
+        _dealerPaneBoundX = _playerPaneBoundX = 0;
+        _dealerPaneBoundY = _playerPaneBoundY = 0;
+        _dealerPaneLayerPosition = _playerPaneLayerPosition = 0;
 
         this.assembleInnerLabels();
 
@@ -132,9 +137,14 @@ public class Application extends JFrame {
         return _initPanel;
     }
 
+    public JLayeredPane getDealerPane() {
+        return _dealerPane;
+    }
+
     public JLayeredPane getPlayerPane() {
         return _playerPane;
     }
+
 
     public int getPlayerPaneBoundX() {
         return _playerPaneBoundX;
@@ -156,8 +166,8 @@ public class Application extends JFrame {
         this._playerPaneBoundY = newBound;
     }
 
-    public int getPlayerPaneOffset() {
-        return _playerPaneOffset;
+    public int getCardPlayerPaneOffset() {
+        return _cardPlayerPaneOffset;
     }
 
     public int getPlayerPaneLayerPosition() {
@@ -169,6 +179,37 @@ public class Application extends JFrame {
 
         this._playerPaneLayerPosition = newPosition;
     }
+
+    public int getDealerPaneBoundX() {
+        return _dealerPaneBoundX;
+    }
+
+    public void setDealerPaneBoundX(int newBound) {
+        // args check
+
+        this._dealerPaneBoundX = newBound;
+    }
+
+    public int getDealerPaneBoundY() {
+        return _dealerPaneBoundY;
+    }
+
+    public void setDealerPaneBoundY(int newBound) {
+        // args check
+
+        this._dealerPaneBoundY = newBound;
+    }
+
+    public int getDealerPaneLayerPosition() {
+        return _dealerPaneLayerPosition;
+    }
+
+    public void setDealerPaneLayerPosition(int newPosition) {
+        // args check
+
+        this._dealerPaneLayerPosition = newPosition;
+    }
+
 
     public JLabel getCardDeckSizeLabel() {
         return _cardDeckSizeLabel;
@@ -194,19 +235,24 @@ public class Application extends JFrame {
         return _playerTotalPtsLabel;
     }
 
+    public JLabel getDealerTotalPtsLabel() {
+        return _dealerTotalPtsLabel;
+    }
+
 
     // Methods:
 
     private void assembleInnerLabels() {
         _dealerTotalStaticLabel = new JLabel("Dealer's total points:");
-        _dealerTotalPtsLabel = new JLabel("0");
+        _dealerTotalPtsLabel = new JLabel();
 
         _playerTotalStaticLabel = new JLabel("Total points:");
-        _playerTotalPtsLabel = new JLabel("0");
+        _playerTotalPtsLabel = new JLabel();
 
-        // make the same as above to the cardDeckSizeLabel
-        _cardDeckSizeLabel = new JLabel(Integer.toString(_model.getCardDeckSize()) + " cards");
-        _cardDeckSizeLabel.setFont(new Font("Roboto", Font.BOLD, 32));
+        _cardDeckStaticLabel = new JLabel("Cards:");
+        _cardDeckStaticLabel.setFont(_cardDeckStaticLabel.getFont().deriveFont(24.0f));
+        _cardDeckSizeLabel = new JLabel();
+        _cardDeckSizeLabel.setFont(_cardDeckSizeLabel.getFont().deriveFont(24.0f));
     }
 
     private void assembleInnerPanels() {
@@ -215,6 +261,8 @@ public class Application extends JFrame {
         _rightPanel = GuiCreator.createPanel(
                 new GridBagLayout(),
                 BorderFactory.createTitledBorder("The Deck"));
+
+        _cardDeckSizePanel = new JPanel();
 
         _bottomPanel = GuiCreator.createPanel(new FlowLayout(FlowLayout.CENTER));
 
@@ -265,7 +313,7 @@ public class Application extends JFrame {
         _initPanel = new JPanel(new GridBagLayout());
 
         _initGreetingsLabel = new JLabel("Welcome to Twenty-One Points Game!");
-        _initGreetingsLabel.setFont(new Font("Roboto", Font.BOLD, 16));
+        _initGreetingsLabel.setFont(_initGreetingsLabel.getFont().deriveFont(16.0f));
 
         _initPictureLabel = new JLabel(new ImageIcon("images/favicon.png"), JLabel.CENTER);
 
@@ -293,15 +341,7 @@ public class Application extends JFrame {
     }
 
     public void windowAssembly() {
-        GBConstraints gbc = new GBConstraints(GridBagConstraints.VERTICAL);
-
-        _rightPanel.add(_cardDeckButton, gbc);
-        gbc.assembly(GBConstraints.Y);
-        _rightPanel.add(_cardDeckSizeLabel, gbc);
-
         _cardDeckButton.setActionCommand(Controller.ButtonClickListener.HIT);
-
-        // For bottom panel:
         _playButton.setActionCommand(Controller.ButtonClickListener.NEW_GAME);
         _hitButton.setActionCommand(Controller.ButtonClickListener.HIT);
         _standButton.setActionCommand(Controller.ButtonClickListener.STAND);
@@ -321,6 +361,15 @@ public class Application extends JFrame {
 
         _leftPanel.add(_topLeftPanel);
         _leftPanel.add(_bottomLeftPanel);
+
+        _cardDeckSizePanel.add(_cardDeckStaticLabel);
+        _cardDeckSizePanel.add(_cardDeckSizeLabel);
+
+        GBConstraints gbc = new GBConstraints(GridBagConstraints.VERTICAL);
+
+        _rightPanel.add(_cardDeckButton, gbc);
+        gbc.assembly(GBConstraints.Y);
+        _rightPanel.add(_cardDeckSizePanel, gbc);
 
         _bottomPanel.add(_playButton);
         _bottomPanel.add(_hitButton);
