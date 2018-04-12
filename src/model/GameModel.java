@@ -23,8 +23,16 @@ public class GameModel {
         _cardPlayers = new Vector<>();
     }
 
+    public Stack<Card> getCardDeck() {
+        return _cardDeck;
+    }
+
     public int getCardDeckSize() {
         return _cardDeck.size();
+    }
+
+    public Vector<CardPlayer> getCardPlayers() {
+        return _cardPlayers;
     }
 
     public CardPlayer getCardPlayer(int playerIndex) {
@@ -33,15 +41,11 @@ public class GameModel {
         return _cardPlayers.elementAt(playerIndex);
     }
 
-    public Vector<Card> getPlayerDeck(int playerIndex) {
-        // <- argument checking
-
-        return _cardPlayers.elementAt(playerIndex).getCardDeck();
-    }
-
-    public Stack<Card> getCardDeck() {
-        return _cardDeck;
-    }
+//    public Vector<Card> getPlayerDeck(int playerIndex) {
+//        // <- argument checking
+//
+//        return _cardPlayers.elementAt(playerIndex).getCardDeck();
+//    }
 
     private void shuffleDeck() {
         Collections.shuffle(_cardDeck);
@@ -93,21 +97,17 @@ public class GameModel {
         System.out.println("initialActions - ok");
     }
 
+    public void runPlayerTurns(boolean forRegularPlayers) {
+        for (CardPlayer cardPlayer : _cardPlayers) {
+            if (cardPlayer.isDealer() != forRegularPlayers)
+                performPlayerActions(cardPlayer);
+        }
+    }
+
     public void playGame() {
 //        this.initialActions();
-
-        // Here are the regular players play
-        for (CardPlayer cardPlayer : _cardPlayers) {
-            if (!cardPlayer.isDealer())
-                performPlayerActions(cardPlayer);
-        }
-
-        // Now here should be the dealer's turns,
-        // because in the 'for' above it's impossible to do
-        for (CardPlayer cardPlayer : _cardPlayers) {
-            if (cardPlayer.isDealer())
-                performPlayerActions(cardPlayer);
-        }
+//        this.runPlayerTurns(true);
+//        this.runPlayerTurns(false);
 
         System.out.println("Now the players open their hands..");
         for (CardPlayer cardPlayer : _cardPlayers) {
