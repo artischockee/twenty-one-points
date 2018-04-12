@@ -14,6 +14,7 @@ Because of that, the cards like Jack (J), Queen (Q) and King (K) have their weig
 ## Goals
 - [x] Write basic Model's logic
 - [ ] Make an interaction for players's table
+- [ ] Get rid of setting font for View's labels
 - [ ] Unite the Model and the View using Controller
 
 ## Disclaimer
