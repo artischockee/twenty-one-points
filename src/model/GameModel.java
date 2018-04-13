@@ -3,6 +3,8 @@ package model;
 import java.util.*;
 
 public class GameModel {
+    // Attributes ::
+
     public static final int DECK_SIZE = 36;
     public static final int MAX_SCORE = 21;
     public static final int MAX_DEALER_TOTAL = 17;
@@ -17,10 +19,24 @@ public class GameModel {
 
     private Stack<Card> _cardDeck;
     private Vector<CardPlayer> _cardPlayers;
+    private boolean _isRun;
+
+    // Constructor ::
 
     public GameModel() throws IllegalArgumentException {
         _cardDeck = CardDeckCreator.createDeck(DECK_SIZE);
         _cardPlayers = new Vector<>();
+        _isRun = false;
+    }
+
+
+    // Getters and setters ::
+
+    public Card getCardFromCardDeck() throws EmptyStackException {
+        if (_cardDeck.isEmpty())
+            throw new EmptyStackException();
+
+        return _cardDeck.pop();
     }
 
     public Stack<Card> getCardDeck() {
@@ -29,6 +45,10 @@ public class GameModel {
 
     public int getCardDeckSize() {
         return _cardDeck.size();
+    }
+
+    public boolean isCardDeckEmpty() {
+        return _cardDeck.isEmpty();
     }
 
     public Vector<CardPlayer> getCardPlayers() {
@@ -41,17 +61,50 @@ public class GameModel {
         return _cardPlayers.elementAt(playerIndex);
     }
 
-//    public Vector<Card> getPlayerDeck(int playerIndex) {
-//        // <- argument checking
-//
-//        return _cardPlayers.elementAt(playerIndex).getCardDeck();
-//    }
+    public boolean isRun() {
+        return _isRun;
+    }
 
-    private void shuffleDeck() {
+    // Methods ::
+
+    public void reload() {
+        _cardDeck = CardDeckCreator.createDeck(DECK_SIZE);
+        _cardPlayers.clear();
+    }
+
+    public void shuffleDeck() {
         Collections.shuffle(_cardDeck);
 
         System.out.println("shuffleDeck - ok");
     }
+
+//    public TurnStatement performPlayerActions(CardPlayer player) {
+//        if (player.hasPassed())
+//
+//        if (!player.hasPassed()
+//                && !player.hasExceeded()
+//                && !player.hasWon()) {
+//            TurnStatement statement = player.getScoreMeaning();
+//            switch (statement) {
+//                case GET_CARD:
+//                    if (_cardDeck.isEmpty())
+//                        throw new EmptyStackException();
+//                    player.addCard(_cardDeck.pop());
+//                    break;
+//                case PASS_ROUND:
+//                    player.setPass(true);
+//                    break;
+//                case WIN:
+//                    player.setWin(true);
+//                    break;
+//                case EXCEED:
+//                    player.setExceed(true);
+//                    break;
+//            }
+//        }
+//
+//        return statement;
+//    }
 
     private void performPlayerActions(CardPlayer player) {
         while (!player.hasPassed()
@@ -60,7 +113,8 @@ public class GameModel {
             TurnStatement statement = player.analyzeTurn();
             switch (statement) {
                 case HIT:
-                    // TODO: 4/9/18 Check if there is any card left in the deck before taking it
+                    if (_cardDeck.isEmpty())
+                        throw new EmptyStackException();
                     player.addCard(_cardDeck.pop());
                     break;
                 case STAND:
@@ -76,25 +130,22 @@ public class GameModel {
         }
     }
 
-    private void firstCardDistribution() {
+    public void firstCardDistribution() {
         for (CardPlayer cardPlayer : _cardPlayers) {
-            // TODO: 4/6/18 add exception handling in case of cardDeck is empty
+            if (_cardDeck.isEmpty())
+                throw new EmptyStackException();
             cardPlayer.addCard(_cardDeck.pop());
         }
 
         System.out.println("firstCardDistribution - ok");
     }
 
-    public void initialActions() {
-        this.shuffleDeck();
-
+    public void appendPlayers() {
         _cardPlayers.add(new Computer());
         _cardPlayers.add(new Player());
         _cardPlayers.elementAt(0).setDealer(true);
 
-        this.firstCardDistribution();
-
-        System.out.println("initialActions - ok");
+        System.out.println("appendPlayers - ok");
     }
 
     public void runPlayerTurns(boolean forRegularPlayers) {
@@ -104,16 +155,10 @@ public class GameModel {
         }
     }
 
-    public void playGame() {
-//        this.initialActions();
-//        this.runPlayerTurns(true);
-//        this.runPlayerTurns(false);
+    public void run() {
+        this.shuffleDeck();
+        this.appendPlayers();
 
-        System.out.println("Now the players open their hands..");
-        for (CardPlayer cardPlayer : _cardPlayers) {
-            System.out.println(cardPlayer.getPlayerName() + "'s cards:");
-            cardPlayer.showCardDeck();
-            System.out.println("Total points: " + cardPlayer.getPointsAmount());
-        }
+        _isRun = true;
     }
 }
