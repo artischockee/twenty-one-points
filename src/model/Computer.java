@@ -31,17 +31,12 @@ public class Computer extends CardPlayer {
 
     @Override
     public TurnStatement analyzeTurn() {
-        String playerName = this.getPlayerName();
         int pointsAmount = this.getPointsAmount();
 
-        if (pointsAmount > GameModel.MAX_SCORE) {
-            System.out.println(playerName + " has exceeded the maximum score. It's lost.");
+        if (pointsAmount > GameModel.MAX_SCORE)
             return TurnStatement.EXCEED;
-        }
-        else if (pointsAmount == GameModel.MAX_SCORE) {
-            System.out.println(playerName + " has earned 21 points!");
+        else if (pointsAmount == GameModel.MAX_SCORE)
             return TurnStatement.WIN;
-        }
 
         if (this.isDealer() && pointsAmount >= GameModel.MAX_DEALER_TOTAL)
             return TurnStatement.STAND;
@@ -62,11 +57,11 @@ public class Computer extends CardPlayer {
         int thirdBreakpoint = upperBound - 1;
 
         if (pointsAmount <= firstBreakpoint)
-            return calculatePossibility(85);
+            return calculatePossibility(90);
         else if (pointsAmount <= secondBreakpoint)
-            return calculatePossibility(60);
+            return calculatePossibility(70);
         else if (pointsAmount <= thirdBreakpoint)
-            return calculatePossibility(35);
+            return calculatePossibility(40);
 
 
         return TurnStatement.STAND;
