@@ -1,13 +1,7 @@
 package model;
 
-import java.util.*;
-
 enum Suit {
     DIAMONDS, CLUBS, HEARTS, SPADES;
-
-    public static int length() {
-        return values().length;
-    }
 
     public String getShortNotation() {
         switch (this) {
@@ -24,7 +18,7 @@ enum Suit {
         }
     }
 
-    public String getSymbol() {
+    public String getUnicodeSymbol() {
         switch (this) {
             case DIAMONDS:
                 return "♦"; // U+2666
@@ -42,10 +36,6 @@ enum Suit {
 
 enum CardName {
     JACK, QUEEN, KING, SIX, SEVEN, EIGHT, NINE, TEN, ACE;
-
-    public static int length() {
-        return values().length;
-    }
 
     public String getSymbol() {
         switch (this) {
@@ -78,8 +68,8 @@ public class Card {
     private final CardName _cardName;
     private int _cardWeight;
 
-    public String getSuitSymbol() {
-        return _suit.getSymbol();
+    public String getSuitUnicodeSymbol() {
+        return _suit.getUnicodeSymbol();
     }
 
     public String getSuitShortNotation() {
@@ -110,51 +100,10 @@ public class Card {
     }
 
     public void show() {
-        System.out.printf("%s %s : %s points\n", _cardName.getSymbol(), _suit.getSymbol(), _cardWeight);
+        System.out.printf("%s %s : %s points\n", _cardName.getSymbol(), _suit.getUnicodeSymbol(), _cardWeight);
     }
 
     public void showConcise() {
-        System.out.printf("%s%s ", _cardName.getSymbol(), _suit.getSymbol());
-    }
-}
-
-final class CardDeckCreator {
-    private static final Map<CardName, Integer> WEIGHT_MAP_TWENTY_ONE = new HashMap<>();
-
-    static {
-        WEIGHT_MAP_TWENTY_ONE.put(CardName.JACK, 2);
-        WEIGHT_MAP_TWENTY_ONE.put(CardName.QUEEN, 3);
-        WEIGHT_MAP_TWENTY_ONE.put(CardName.KING, 4);
-        WEIGHT_MAP_TWENTY_ONE.put(CardName.SIX, 6);
-        WEIGHT_MAP_TWENTY_ONE.put(CardName.SEVEN, 7);
-        WEIGHT_MAP_TWENTY_ONE.put(CardName.EIGHT, 8);
-        WEIGHT_MAP_TWENTY_ONE.put(CardName.NINE, 9);
-        WEIGHT_MAP_TWENTY_ONE.put(CardName.TEN, 10);
-        WEIGHT_MAP_TWENTY_ONE.put(CardName.ACE, 11);
-    }
-
-    public static Collection<Integer> getWeights21() {
-        return WEIGHT_MAP_TWENTY_ONE.values();
-    }
-
-    public static Stack<Card> createDeck(int deckSize) throws IllegalArgumentException {
-        if (deckSize != GameModel.DECK_SIZE) {
-            throw new IllegalArgumentException("There is no suitable deck size for the specified number.");
-            // This is probably a blank for further improvements (e.g. different deck size)
-        }
-
-        Stack<Card> deck = new Stack<>();
-
-        for (CardName cardName: CardName.values())
-            for (Suit suit: Suit.values()) {
-                try {
-                    deck.add(new Card(suit, cardName, WEIGHT_MAP_TWENTY_ONE.get(cardName)));
-                }
-                catch (NullPointerException | IllegalArgumentException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        return deck;
+        System.out.printf("%s%s ", _cardName.getSymbol(), _suit.getUnicodeSymbol());
     }
 }
