@@ -36,13 +36,6 @@ public abstract class CardPlayer {
         _cardDeck.add(card);
     }
 
-    public void showCardDeck() {
-        for (Card card : _cardDeck) {
-            card.showConcise();
-        }
-        System.out.println();
-    }
-
     public String getPlayerName() {
         return _playerName;
     }
@@ -81,5 +74,6 @@ public abstract class CardPlayer {
 
     public abstract int getPlayerIndex();
 
+    // TODO: 4/14/18 to be renamed
     public abstract TurnStatement analyzeTurn();
 }
