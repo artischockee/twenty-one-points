@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 public class Application extends JFrame {
-    // Attributes:
+    // Attributes ::
 
     private GameModel _model;
 
@@ -18,62 +18,62 @@ public class Application extends JFrame {
     private final int _frameHeight = 600;
     private final int _gridGap = 8;
 
-    private final Image _appIcon = Toolkit.getDefaultToolkit().getImage("images/favicon.png");
+    private final Image _appIcon = Toolkit.getDefaultToolkit().getImage("resources/favicon.png");
 
     private JPanel _mainPanel;
 
+    // Main (and the one) menu bar:
     private JMenuBar _menuBar;
     private JMenu _gameMenu;
+    // TODO: 4/13/18 for the playGame item add interaction while initial window is displayed
     private JMenuItem _playGameMenuItem;
     private JMenuItem _exitGameMenuItem;
     private JMenu _helpMenu;
     private JMenuItem _aboutMenuItem;
 
+    // All the primary panels on which
+    // the main action takes place:
     private JPanel _leftPanel;
     private JPanel _rightPanel;
     private JPanel _bottomPanel;
 
+    // Elements of the left panel
+    // that belong to the game dealer:
     private JPanel _topLeftPanel;
-    private JLayeredPane _dealerPane;
+    private LayeredPane _dealerPane;
     private JPanel _dealerPointsPanel;
-    private JLabel _dealerTotalStaticLabel;
+//    private JLabel _dealerTotalStaticLabel;
     private JLabel _dealerTotalPtsLabel;
 
+    // Elements of the left panel
+    // that belong to the game player:
     private JPanel _bottomLeftPanel;
-    private JLayeredPane _playerPane;
+    private LayeredPane _playerPane;
     private JPanel _playerPointsPanel;
-    private JLabel _playerTotalStaticLabel;
+//    private JLabel _playerTotalStaticLabel;
     private JLabel _playerTotalPtsLabel;
 
-    // Make these attributes for separated class that extends JLayeredPane:
-    private int _dealerPaneBoundX;
-    private int _dealerPaneBoundY;
-    private int _playerPaneBoundX;
-    private int _playerPaneBoundY;
-    private final int _cardPlayerPaneOffset = 30;
-    private int _dealerPaneLayerPosition;
-    private int _playerPaneLayerPosition;
-
+    // Elements of the right panel
+    // that belong to the card deck:
     private JButton _cardDeckButton;
     private JPanel _cardDeckSizePanel;
-    private JLabel _cardDeckStaticLabel;
+//    private JLabel _cardDeckStaticLabel;
     private JLabel _cardDeckSizeLabel;
 
-    // Bottom control panel:
+    // Elements of the bottom panel, where
+    // the main control buttons take place
     private JButton _playButton;
     private JButton _hitButton;
     private JButton _standButton;
     private JButton _exitButton;
 
-    // Initial window:
+    // Initial window and its elements:
     private JPanel _initPanel;
-    private JLabel _initGreetingsLabel;
-    private JLabel _initPictureLabel;
     private JButton _initLaunchButton;
     private JButton _initExitButton;
 
 
-    // Constructor:
+    // Constructor ::
 
     public Application(GameModel model) throws IllegalArgumentException {
         super("21 Points - The Game");
@@ -104,13 +104,9 @@ public class Application extends JFrame {
                 Component.CENTER_ALIGNMENT
         );
 
-        _dealerPaneBoundX = _playerPaneBoundX = 0;
-        _dealerPaneBoundY = _playerPaneBoundY = 0;
-        _dealerPaneLayerPosition = _playerPaneLayerPosition = 0;
-
         this.assembleInnerLabels();
 
-        _cardDeckButton = new JButton(new ImageIcon("images/card_back/green_back.png"));
+        _cardDeckButton = new JButton(new ImageIcon("resources/card_back/green_back.png"));
         _cardDeckButton.setEnabled(false);
 
         _playButton = new JButton("New Game");
@@ -127,7 +123,7 @@ public class Application extends JFrame {
     }
 
 
-    // Getters and setters:
+    // Getters and setters ::
 
     public JPanel getMainPanel() {
         return _mainPanel;
@@ -137,79 +133,13 @@ public class Application extends JFrame {
         return _initPanel;
     }
 
-    public JLayeredPane getDealerPane() {
+    public LayeredPane getDealerPane() {
         return _dealerPane;
     }
 
-    public JLayeredPane getPlayerPane() {
+    public LayeredPane getPlayerPane() {
         return _playerPane;
     }
-
-
-    public int getPlayerPaneBoundX() {
-        return _playerPaneBoundX;
-    }
-
-    public void setPlayerPaneBoundX(int newBound) {
-        // args check
-
-        this._playerPaneBoundX = newBound;
-    }
-
-    public int getPlayerPaneBoundY() {
-        return _playerPaneBoundY;
-    }
-
-    public void setPlayerPaneBoundY(int newBound) {
-        // args check
-
-        this._playerPaneBoundY = newBound;
-    }
-
-    public int getCardPlayerPaneOffset() {
-        return _cardPlayerPaneOffset;
-    }
-
-    public int getPlayerPaneLayerPosition() {
-        return _playerPaneLayerPosition;
-    }
-
-    public void setPlayerPaneLayerPosition(int newPosition) {
-        // args check
-
-        this._playerPaneLayerPosition = newPosition;
-    }
-
-    public int getDealerPaneBoundX() {
-        return _dealerPaneBoundX;
-    }
-
-    public void setDealerPaneBoundX(int newBound) {
-        // args check
-
-        this._dealerPaneBoundX = newBound;
-    }
-
-    public int getDealerPaneBoundY() {
-        return _dealerPaneBoundY;
-    }
-
-    public void setDealerPaneBoundY(int newBound) {
-        // args check
-
-        this._dealerPaneBoundY = newBound;
-    }
-
-    public int getDealerPaneLayerPosition() {
-        return _dealerPaneLayerPosition;
-    }
-
-    public void setDealerPaneLayerPosition(int newPosition) {
-        // args check
-
-        this._dealerPaneLayerPosition = newPosition;
-    }
-
 
     public JLabel getCardDeckSizeLabel() {
         return _cardDeckSizeLabel;
@@ -240,17 +170,17 @@ public class Application extends JFrame {
     }
 
 
-    // Methods:
+    // Methods ::
 
     private void assembleInnerLabels() {
-        _dealerTotalStaticLabel = new JLabel("Dealer's total points:");
+//        _dealerTotalStaticLabel = new JLabel("Dealer's total points:");
         _dealerTotalPtsLabel = new JLabel();
 
-        _playerTotalStaticLabel = new JLabel("Total points:");
+//        _playerTotalStaticLabel = new JLabel("Total points:");
         _playerTotalPtsLabel = new JLabel();
 
-        _cardDeckStaticLabel = new JLabel("Cards:");
-        _cardDeckStaticLabel.setFont(_cardDeckStaticLabel.getFont().deriveFont(24.0f));
+//        _cardDeckStaticLabel = new JLabel("Cards:");
+//        _cardDeckStaticLabel.setFont(_cardDeckStaticLabel.getFont().deriveFont(24.0f));
         _cardDeckSizeLabel = new JLabel();
         _cardDeckSizeLabel.setFont(_cardDeckSizeLabel.getFont().deriveFont(24.0f));
     }
@@ -289,7 +219,7 @@ public class Application extends JFrame {
         _playGameMenuItem.setActionCommand(Controller.ButtonClickListener.NEW_GAME);
 
         _exitGameMenuItem = new JMenuItem("Exit");
-        _exitGameMenuItem.setActionCommand(Controller.ButtonClickListener.EXIT_GAME);
+        _exitGameMenuItem.setActionCommand(Controller.ButtonClickListener.EXIT_GAME_NO_DIALOG);
 
         _helpMenu = new JMenu("Help");
         _helpMenu.setMnemonic(KeyEvent.VK_H);
@@ -312,10 +242,10 @@ public class Application extends JFrame {
     private void initialWindowAssembly() {
         _initPanel = new JPanel(new GridBagLayout());
 
-        _initGreetingsLabel = new JLabel("Welcome to Twenty-One Points Game!");
-        _initGreetingsLabel.setFont(_initGreetingsLabel.getFont().deriveFont(16.0f));
+        JLabel greetingsLabel = new JLabel("Welcome to Twenty-One Points Game!");
+        greetingsLabel.setFont(greetingsLabel.getFont().deriveFont(16.0f));
 
-        _initPictureLabel = new JLabel(new ImageIcon("images/favicon.png"), JLabel.CENTER);
+        JLabel pictureLabel = new JLabel(new ImageIcon("resources/favicon.png"), JLabel.CENTER);
 
         _initLaunchButton = new JButton("Launch game");
         _initLaunchButton.setActionCommand(Controller.ButtonClickListener.LAUNCH_APP);
@@ -326,10 +256,10 @@ public class Application extends JFrame {
         GBConstraints gbc = new GBConstraints(GridBagConstraints.BOTH);
 
         gbc.assembly(GBConstraints.Y, new Insets(0, 0, 32, 0));
-        _initPanel.add(_initGreetingsLabel, gbc);
+        _initPanel.add(greetingsLabel, gbc);
 
         gbc.assembly(GBConstraints.Y);
-        _initPanel.add(_initPictureLabel, gbc);
+        _initPanel.add(pictureLabel, gbc);
 
         gbc.assembly(GBConstraints.Y, new Insets(16, 0, 0, 0));
         _initPanel.add(_initLaunchButton, gbc);
@@ -340,29 +270,36 @@ public class Application extends JFrame {
         _mainPanel.add(_initPanel);
     }
 
-    public void windowAssembly() {
-        _cardDeckButton.setActionCommand(Controller.ButtonClickListener.HIT);
+    private void setActionCommands() {
+        _cardDeckButton.setActionCommand(Controller.ButtonClickListener.GET_CARD);
         _playButton.setActionCommand(Controller.ButtonClickListener.NEW_GAME);
-        _hitButton.setActionCommand(Controller.ButtonClickListener.HIT);
-        _standButton.setActionCommand(Controller.ButtonClickListener.STAND);
+        _hitButton.setActionCommand(Controller.ButtonClickListener.GET_CARD);
+        _standButton.setActionCommand(Controller.ButtonClickListener.PASS_ROUND);
         _exitButton.setActionCommand(Controller.ButtonClickListener.EXIT_GAME);
+    }
+
+    public void windowAssembly() {
+        this.setActionCommands();
 
         // Adding the elements:
 
         _topLeftPanel.add(_dealerPane, BorderLayout.CENTER);
-        _dealerPointsPanel.add(_dealerTotalStaticLabel);
+        _dealerPointsPanel.add(new JLabel("Dealer's total points:"));
         _dealerPointsPanel.add(_dealerTotalPtsLabel);
         _topLeftPanel.add(_dealerPointsPanel, BorderLayout.PAGE_END);
 
         _bottomLeftPanel.add(_playerPane, BorderLayout.CENTER);
-        _playerPointsPanel.add(_playerTotalStaticLabel);
+        _playerPointsPanel.add(new JLabel("Total points:"));
         _playerPointsPanel.add(_playerTotalPtsLabel);
         _bottomLeftPanel.add(_playerPointsPanel, BorderLayout.PAGE_END);
 
         _leftPanel.add(_topLeftPanel);
         _leftPanel.add(_bottomLeftPanel);
 
-        _cardDeckSizePanel.add(_cardDeckStaticLabel);
+        JLabel cardDeckStaticLabel = new JLabel("Cards:");
+        cardDeckStaticLabel.setFont(cardDeckStaticLabel.getFont().deriveFont(24.0f));
+
+        _cardDeckSizePanel.add(cardDeckStaticLabel);
         _cardDeckSizePanel.add(_cardDeckSizeLabel);
 
         GBConstraints gbc = new GBConstraints(GridBagConstraints.VERTICAL);
@@ -396,15 +333,79 @@ public class Application extends JFrame {
         this.pack();
     }
 
+    public void reloadPanes() {
+        _dealerPane.reset();
+        _playerPane.reset();
+    }
+
+    // JOptionPane's dialogs:
+
+    public int showWinGameDialog() {
+        Object[] options = { "Play another game!", "Quit" };
+
+        return JOptionPane.showOptionDialog(this,
+                "Congratulations, you win in this game!\n" +
+                        "What are you going to do next?",
+                "You are the winner!",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                options, options[0]);
+    }
+
+    public int showLoseGameDialog() {
+        Object[] options = { "Play another game!", "I'm tired, just quit" };
+
+        return JOptionPane.showOptionDialog(this,
+                "Sorry, you lose in this game.\n" +
+                        "What are you going to do next?",
+                "Regretfully, you lose",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                options, options[0]);
+    }
+
+    public int showExitDialog() {
+        return JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to quit the game?",
+                "Game quit",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+    }
+
+    public int showNewGameDialog() {
+        return JOptionPane.showConfirmDialog(this,
+                "Current game will be reloaded. Are you sure?",
+                "New Game",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+    }
+
+    public void showAboutDialog() {
+        JOptionPane.showMessageDialog(this,
+                "Twenty-One Points Game.\nAuthor: Artem Piskarev",
+                "About",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void showEmptyDeckWarningDialog() {
+        JOptionPane.showMessageDialog(this,
+                "There are no cards left on the deck!",
+                "The card deck is empty",
+                JOptionPane.WARNING_MESSAGE);
+    }
+
+    // ActionListeners:
+
     public void addButtonClickListener(ActionListener actionListener) {
-        // Initial panel:
         _initLaunchButton.addActionListener(actionListener);
         _initExitButton.addActionListener(actionListener);
-        // Menu bar:
+
         _playGameMenuItem.addActionListener(actionListener);
         _exitGameMenuItem.addActionListener(actionListener);
         _aboutMenuItem.addActionListener(actionListener);
-        // Any buttons:
+
         _cardDeckButton.addActionListener(actionListener);
         _playButton.addActionListener(actionListener);
         _hitButton.addActionListener(actionListener);
