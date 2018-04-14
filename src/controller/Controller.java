@@ -78,6 +78,9 @@ public class Controller {
         }
 
         private void invokeGameRoutine() {
+            if (_view.containsInitPanel())
+                this.launchApplication();
+
             if (_model.isRun()) {
                 int response = _view.showNewGameDialog();
 

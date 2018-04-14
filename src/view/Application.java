@@ -25,7 +25,6 @@ public class Application extends JFrame {
     // Main (and the one) menu bar:
     private JMenuBar _menuBar;
     private JMenu _gameMenu;
-    // TODO: 4/13/18 for the playGame item add interaction while initial window is displayed
     private JMenuItem _playGameMenuItem;
     private JMenuItem _exitGameMenuItem;
     private JMenu _helpMenu;
@@ -67,7 +66,7 @@ public class Application extends JFrame {
     private JButton _standButton;
     private JButton _exitButton;
 
-    // Initial window and its elements:
+    // Initial panel and its elements:
     private JPanel _initPanel;
     private JButton _initLaunchButton;
     private JButton _initExitButton;
@@ -116,7 +115,7 @@ public class Application extends JFrame {
         _standButton.setEnabled(false);
         _exitButton = new JButton("Exit");
 
-        this.initialWindowAssembly();
+        this.initialPanelAssembly();
 
         this.setContentPane(_mainPanel);
         this.pack();
@@ -171,6 +170,10 @@ public class Application extends JFrame {
 
 
     // Methods ::
+
+    public boolean containsInitPanel() {
+        return _mainPanel.isAncestorOf(_initPanel);
+    }
 
     private void assembleInnerLabels() {
 //        _dealerTotalStaticLabel = new JLabel("Dealer's total points:");
@@ -239,7 +242,7 @@ public class Application extends JFrame {
         this.setJMenuBar(_menuBar);
     }
 
-    private void initialWindowAssembly() {
+    private void initialPanelAssembly() {
         _initPanel = new JPanel(new GridBagLayout());
 
         JLabel greetingsLabel = new JLabel("Welcome to Twenty-One Points Game!");
@@ -411,9 +414,5 @@ public class Application extends JFrame {
         _hitButton.addActionListener(actionListener);
         _standButton.addActionListener(actionListener);
         _exitButton.addActionListener(actionListener);
-    }
-
-    public void addModelChangeListener(ActionListener actionListener) {
-//        _cardDeckButton.addActionListener(actionListener);
     }
 }
