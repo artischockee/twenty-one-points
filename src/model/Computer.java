@@ -3,43 +3,58 @@ package model;
 import java.util.Random;
 
 public class Computer extends CardPlayer {
+    // Attributes ::
+
     private static int _computerIndex;
+
+    // These attributes impact on computer's decisions
+    private static final Random _random;
+    private static final int _maxPossibility = 100;
+    private static final int[] _possibilityPercentages = { 90, 70, 40 };
+
+    // Static fields initialization ::
 
     static {
         _computerIndex = 0;
+        _random = new Random();
     }
+
+    // Constructor ::
 
     Computer() {
         super("Computer " + ++_computerIndex);
     }
+
+    // Methods ::
+
+    static void resetPlayerIndex() {
+        _computerIndex = 0;
+    }
+
+    private void calculatePossibility(double percentage) {
+        int possibility = _random.nextInt(_maxPossibility + 1);
+        if (possibility > percentage)
+            this.setPass(true);
+    }
+
+    // Overridden methods ::
 
     @Override
     public int getPlayerIndex() {
         return _computerIndex;
     }
 
-    private TurnStatement calculatePossibility(double percentage) {
-        Random random = new Random();
-        int maxPossibility = 100;
-
-        int possibility = random.nextInt(maxPossibility);
-        if (possibility <= percentage)
-            return TurnStatement.HIT;
-        else
-            return TurnStatement.STAND;
-    }
-
     @Override
-    public TurnStatement analyzeTurn() {
+    public void analyzeTurn() {
         int pointsAmount = this.getPointsAmount();
 
         if (pointsAmount > GameModel.MAX_SCORE)
-            return TurnStatement.EXCEED;
+            this.setExceed(true);
         else if (pointsAmount == GameModel.MAX_SCORE)
-            return TurnStatement.WIN;
+            this.setWin(true);
 
         if (this.isDealer() && pointsAmount >= GameModel.MAX_DEALER_TOTAL)
-            return TurnStatement.STAND;
+            this.setPass(true);
 
         // Below is the main decision determination:
 
@@ -47,23 +62,22 @@ public class Computer extends CardPlayer {
         int lowerBound = GameModel.MAX_SCORE - GameModel.MAX_WEIGHT;
 
         if (pointsAmount == upperBound)
-            return TurnStatement.STAND;
+            this.setPass(true);
 
         if (pointsAmount <= lowerBound)
-            return TurnStatement.HIT;
+            return;
 
-        int firstBreakpoint = lowerBound + (upperBound - lowerBound) / 5;
-        int secondBreakpoint = lowerBound + (upperBound - lowerBound) / 2;
-        int thirdBreakpoint = upperBound - 1;
+        int[] breakpoints = {
+            lowerBound + (upperBound - lowerBound) / 5,
+            lowerBound + (upperBound - lowerBound) / 2,
+            upperBound - 1
+        };
 
-        if (pointsAmount <= firstBreakpoint)
-            return calculatePossibility(90);
-        else if (pointsAmount <= secondBreakpoint)
-            return calculatePossibility(70);
-        else if (pointsAmount <= thirdBreakpoint)
-            return calculatePossibility(40);
-
-
-        return TurnStatement.STAND;
+        if (pointsAmount <= breakpoints[0])
+            this.calculatePossibility(_possibilityPercentages[0]);
+        else if (pointsAmount <= breakpoints[1])
+            this.calculatePossibility(_possibilityPercentages[1]);
+        else if (pointsAmount <= breakpoints[2])
+            this.calculatePossibility(_possibilityPercentages[2]);
     }
 }
