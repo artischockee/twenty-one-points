@@ -15,7 +15,6 @@ public class Controller {
     private GameModel _model;
     private Application _view;
 
-
     // Constructor ::
 
     public Controller(GameModel model, Application view) {
@@ -24,7 +23,6 @@ public class Controller {
 
         view.addButtonClickListener(new ButtonClickListener());
     }
-
 
     // Inner class(es) ::
 
@@ -38,7 +36,6 @@ public class Controller {
         public static final String GET_CARD = "GET_CARD";
         public static final String PASS_ROUND = "PASS_ROUND";
         public static final String ABOUT = "ABOUT";
-
 
         // Methods ::
 
@@ -135,14 +132,14 @@ public class Controller {
             }
         }
 
-        private void winDialog() {
-            int response = _view.showWinGameDialog();
+        private void winDialog(CardPlayer wonPlayer) {
+            int response = _view.showWinGameDialog(wonPlayer.getPlayerName());
 
             processUserResponse(response);
         }
 
-        private void exceedDialog() {
-            int response = _view.showLoseGameDialog();
+        private void exceedDialog(CardPlayer exceededPlayer) {
+            int response = _view.showLoseGameDialog(exceededPlayer.getPlayerName());
 
             processUserResponse(response);
         }
@@ -159,56 +156,27 @@ public class Controller {
         }
 
         private void checkComputerCondition(CardPlayer computer) {
-            TurnStatement condition = computer.analyzeTurn();
+            computer.analyzeTurn();
 
-            switch (condition) {
-                case HIT:
-                    this.addCardFromDeck(0);
-                    this.checkComputerCondition(_model.getCardPlayer(0));
-                    break;
-                case STAND:
-                    JOptionPane.showMessageDialog(_view, "Stop, I'm tired (c) Computer.");
-                    break;
-                case EXCEED:
-                    JOptionPane.showMessageDialog(_view, "Computer has exceeded the points limit.");
-                    break;
-                case WIN:
-                    JOptionPane.showMessageDialog(_view, "Computer wins with 21 points!");
-                    break;
+            if (computer.hasPassed())
+                JOptionPane.showMessageDialog(_view, computer.getPlayerName() + " has passed.");
+            else if (computer.hasExceeded())
+                JOptionPane.showMessageDialog(_view, computer.getPlayerName() + " has exceeded the points limit.");
+            else if (computer.hasWon())
+                JOptionPane.showMessageDialog(_view, computer.getPlayerName() + " has won!");
+            else {
+                this.addCardFromDeck(0);
+                this.checkComputerCondition(computer);
             }
-
-            System.out.println("end of the method checkpoint");
-
-//            TurnStatement condition = computerPlayer.analyzeTurn();
-//
-//            switch (condition) {
-//                case HIT:
-//                    this.addCardFromDeck(0);
-//                    this.checkComputerCondition(_model.getCardPlayer(0));
-//                    break;
-//                case STAND:
-//                    JOptionPane.showMessageDialog(_view, "Stop, I'm tired (c) Computer.");
-//                    break;
-//                case EXCEED:
-//                    JOptionPane.showMessageDialog(_view, "Computer has exceeded the points limit.");
-//                    break;
-//                case WIN:
-//                    JOptionPane.showMessageDialog(_view, "Computer wins with 21 points!");
-//                    break;
-//            }
         }
 
         private void checkCondition(CardPlayer cardPlayer) {
-            TurnStatement condition = cardPlayer.analyzeTurn();
+            cardPlayer.analyzeTurn();
 
-            switch (condition) {
-                case EXCEED:
-                    this.exceedDialog();
-                    break;
-                case WIN:
-                    this.winDialog();
-                    break;
-            }
+            if (cardPlayer.hasExceeded())
+                this.exceedDialog(cardPlayer);
+            else if (cardPlayer.hasWon())
+                this.winDialog(cardPlayer);
         }
 
         private void addCardFromDeck(int playerIndex) {
@@ -223,13 +191,6 @@ public class Controller {
                     _model.getCardPlayer(playerIndex).getCardDeck());
 
             this.refreshDynamicFields();
-        }
-
-        // TODO: 4/15/18 to be renamed and probably placed in the View impl.
-        private void lockButtons() {
-            _view.getCardDeckButton().setEnabled(false);
-            _view.getHitButton().setEnabled(false);
-            _view.getStandButton().setEnabled(false);
         }
 
         @Override
@@ -254,7 +215,7 @@ public class Controller {
                     this.checkCondition(_model.getCardPlayer(1));
                     break;
                 case PASS_ROUND:
-                    this.lockButtons();
+                    _view.disableInteractButtons();
                     this.checkComputerCondition(_model.getCardPlayer(0));
                     break;
                 case ABOUT:
