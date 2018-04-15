@@ -55,8 +55,10 @@ public class GameModel {
         return _cardPlayers;
     }
 
-    public CardPlayer getCardPlayer(int playerIndex) {
-        // <- argument checking
+    public CardPlayer getCardPlayer(int playerIndex) throws IndexOutOfBoundsException {
+        if (playerIndex < 0 || playerIndex >= _cardPlayers.size())
+            throw new IndexOutOfBoundsException(
+                "getCardPlayer: invalid argument 'playerIndex'");
 
         return _cardPlayers.elementAt(playerIndex);
     }
@@ -64,6 +66,7 @@ public class GameModel {
     public boolean isRun() {
         return _isRun;
     }
+
 
     // Methods ::
 
@@ -74,38 +77,9 @@ public class GameModel {
 
     public void shuffleDeck() {
         Collections.shuffle(_cardDeck);
-
-        System.out.println("shuffleDeck - ok");
     }
 
-//    public TurnStatement performPlayerActions(CardPlayer player) {
-//        if (player.hasPassed())
-//
-//        if (!player.hasPassed()
-//                && !player.hasExceeded()
-//                && !player.hasWon()) {
-//            TurnStatement statement = player.getScoreMeaning();
-//            switch (statement) {
-//                case GET_CARD:
-//                    if (_cardDeck.isEmpty())
-//                        throw new EmptyStackException();
-//                    player.addCard(_cardDeck.pop());
-//                    break;
-//                case PASS_ROUND:
-//                    player.setPass(true);
-//                    break;
-//                case WIN:
-//                    player.setWin(true);
-//                    break;
-//                case EXCEED:
-//                    player.setExceed(true);
-//                    break;
-//            }
-//        }
-//
-//        return statement;
-//    }
-
+/**
     private void performPlayerActions(CardPlayer player) {
         while (!player.hasPassed()
                 && !player.hasExceeded()
@@ -136,16 +110,6 @@ public class GameModel {
                 throw new EmptyStackException();
             cardPlayer.addCard(_cardDeck.pop());
         }
-
-        System.out.println("firstCardDistribution - ok");
-    }
-
-    public void appendPlayers() {
-        _cardPlayers.add(new Computer());
-        _cardPlayers.add(new Player());
-        _cardPlayers.elementAt(0).setDealer(true);
-
-        System.out.println("appendPlayers - ok");
     }
 
     public void runPlayerTurns(boolean forRegularPlayers) {
@@ -153,6 +117,13 @@ public class GameModel {
             if (cardPlayer.isDealer() != forRegularPlayers)
                 performPlayerActions(cardPlayer);
         }
+    }
+*/
+
+    public void appendPlayers() {
+        _cardPlayers.add(new Computer());
+        _cardPlayers.add(new Player());
+        _cardPlayers.elementAt(0).setDealer(true);
     }
 
     public void run() {
