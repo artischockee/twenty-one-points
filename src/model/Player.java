@@ -1,15 +1,29 @@
 package model;
 
 public class Player extends CardPlayer {
+    // Attributes ::
+
     private static int _playerIndex;
+
+    // Static fields initialization ::
 
     static {
         _playerIndex = 0;
     }
 
+    // Constructor ::
+
     Player() {
         super("Player " + ++_playerIndex);
     }
+
+    // Methods ::
+
+    static void resetPlayerIndex() {
+        _playerIndex = 0;
+    }
+
+    // Overridden methods ::
 
     @Override
     public int getPlayerIndex() {
@@ -17,17 +31,15 @@ public class Player extends CardPlayer {
     }
 
     @Override
-    public TurnStatement analyzeTurn() {
+    public void analyzeTurn() {
         int pointsAmount = this.getPointsAmount();
 
         if (pointsAmount > GameModel.MAX_SCORE)
-            return TurnStatement.EXCEED;
+            this.setExceed(true);
         else if (pointsAmount == GameModel.MAX_SCORE)
-            return TurnStatement.WIN;
+            this.setWin(true);
 
         if (this.isDealer() && pointsAmount >= GameModel.MAX_DEALER_TOTAL)
-            return TurnStatement.STAND;
-
-        return TurnStatement.HIT;
+            this.setPass(true);
     }
 }
