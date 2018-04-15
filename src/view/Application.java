@@ -41,7 +41,6 @@ public class Application extends JFrame {
     private JPanel _topLeftPanel;
     private LayeredPane _dealerPane;
     private JPanel _dealerPointsPanel;
-//    private JLabel _dealerTotalStaticLabel;
     private JLabel _dealerTotalPtsLabel;
 
     // Elements of the left panel
@@ -49,14 +48,12 @@ public class Application extends JFrame {
     private JPanel _bottomLeftPanel;
     private LayeredPane _playerPane;
     private JPanel _playerPointsPanel;
-//    private JLabel _playerTotalStaticLabel;
     private JLabel _playerTotalPtsLabel;
 
     // Elements of the right panel
     // that belong to the card deck:
     private JButton _cardDeckButton;
     private JPanel _cardDeckSizePanel;
-//    private JLabel _cardDeckStaticLabel;
     private JLabel _cardDeckSizeLabel;
 
     // Elements of the bottom panel, where
@@ -171,19 +168,19 @@ public class Application extends JFrame {
 
     // Methods ::
 
+    public void launchApplication() {
+        this._mainPanel.remove(_initPanel);
+        this.windowAssembly();
+    }
+
     public boolean containsInitPanel() {
         return _mainPanel.isAncestorOf(_initPanel);
     }
 
     private void assembleInnerLabels() {
-//        _dealerTotalStaticLabel = new JLabel("Dealer's total points:");
         _dealerTotalPtsLabel = new JLabel();
-
-//        _playerTotalStaticLabel = new JLabel("Total points:");
         _playerTotalPtsLabel = new JLabel();
 
-//        _cardDeckStaticLabel = new JLabel("Cards:");
-//        _cardDeckStaticLabel.setFont(_cardDeckStaticLabel.getFont().deriveFont(24.0f));
         _cardDeckSizeLabel = new JLabel();
         _cardDeckSizeLabel.setFont(_cardDeckSizeLabel.getFont().deriveFont(24.0f));
     }
