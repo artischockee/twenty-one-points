@@ -173,6 +173,12 @@ public class Application extends JFrame {
         this.windowAssembly();
     }
 
+    public void disableInteractButtons() {
+        this._cardDeckButton.setEnabled(false);
+        this._hitButton.setEnabled(false);
+        this._standButton.setEnabled(false);
+    }
+
     public boolean containsInitPanel() {
         return _mainPanel.isAncestorOf(_initPanel);
     }
@@ -340,30 +346,30 @@ public class Application extends JFrame {
 
     // JOptionPane's dialogs:
 
-    public int showWinGameDialog() {
+    public int showWinGameDialog(String winnerName) {
         Object[] options = { "Play another game!", "Quit" };
 
         return JOptionPane.showOptionDialog(this,
-                "Congratulations, you win in this game!\n" +
+                winnerName + ", congratulations, you win in this game!\n" +
                         "What are you going to do next?",
-                "You are the winner!",
+                winnerName + " is our winner!",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
                 null,
                 options, options[0]);
     }
 
-    public int showLoseGameDialog() {
-        Object[] options = { "Play another game!", "I'm tired, just quit" };
+    public int showLoseGameDialog(String loserName) {
+        Object[] options = { "Play another game!", "Quit" };
 
         return JOptionPane.showOptionDialog(this,
-                "Sorry, you lose in this game.\n" +
+                loserName + ", sorry, you lose in this game.\n" +
                         "What are you going to do next?",
-                "Regretfully, you lose",
+                loserName + " has failed",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
                 null,
-                options, options[0]);
+                options, options[1]);
     }
 
     public int showExitDialog() {
