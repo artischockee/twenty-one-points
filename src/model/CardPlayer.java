@@ -32,10 +32,6 @@ public abstract class CardPlayer {
         return pointsAmount;
     }
 
-    public void addCard(Card card) {
-        _cardDeck.add(card);
-    }
-
     public String getPlayerName() {
         return _playerName;
     }
@@ -44,7 +40,7 @@ public abstract class CardPlayer {
         return _isDealer;
     }
 
-    public void setDealer(boolean state) {
+    void setDealer(boolean state) {
         _isDealer = state;
     }
 
@@ -52,7 +48,7 @@ public abstract class CardPlayer {
         return _hasPassed;
     }
 
-    public void setPass(boolean state) {
+    void setPass(boolean state) {
         _hasPassed = state;
     }
 
@@ -60,7 +56,7 @@ public abstract class CardPlayer {
         return _hasExceeded;
     }
 
-    public void setExceed(boolean state) {
+    void setExceed(boolean state) {
         _hasExceeded = state;
     }
 
@@ -68,12 +64,12 @@ public abstract class CardPlayer {
         return _hasWon;
     }
 
-    public void setWin(boolean state) {
+    void setWin(boolean state) {
         _hasWon = state;
     }
 
     public abstract int getPlayerIndex();
 
     // TODO: 4/14/18 to be renamed
-    public abstract TurnStatement analyzeTurn();
+    public abstract void analyzeTurn();
 }
