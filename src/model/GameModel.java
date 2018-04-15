@@ -73,52 +73,16 @@ public class GameModel {
     public void reload() {
         _cardDeck = CardDeckCreator.createDeck(DECK_SIZE);
         _cardPlayers.clear();
+
+        // poor logic because there is no way to make
+        // abstract static method in CardPlayer class
+        Computer.resetPlayerIndex();
+        Player.resetPlayerIndex();
     }
 
     public void shuffleDeck() {
         Collections.shuffle(_cardDeck);
     }
-
-/**
-    private void performPlayerActions(CardPlayer player) {
-        while (!player.hasPassed()
-                && !player.hasExceeded()
-                && !player.hasWon()) {
-            TurnStatement statement = player.analyzeTurn();
-            switch (statement) {
-                case HIT:
-                    if (_cardDeck.isEmpty())
-                        throw new EmptyStackException();
-                    player.addCard(_cardDeck.pop());
-                    break;
-                case STAND:
-                    player.setPass(true);
-                    break;
-                case WIN:
-                    player.setWin(true);
-                    break;
-                case EXCEED:
-                    player.setExceed(true);
-                    break;
-            }
-        }
-    }
-
-    public void firstCardDistribution() {
-        for (CardPlayer cardPlayer : _cardPlayers) {
-            if (_cardDeck.isEmpty())
-                throw new EmptyStackException();
-            cardPlayer.addCard(_cardDeck.pop());
-        }
-    }
-
-    public void runPlayerTurns(boolean forRegularPlayers) {
-        for (CardPlayer cardPlayer : _cardPlayers) {
-            if (cardPlayer.isDealer() != forRegularPlayers)
-                performPlayerActions(cardPlayer);
-        }
-    }
-*/
 
     public void appendPlayers() {
         _cardPlayers.add(new Computer());
