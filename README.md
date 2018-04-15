@@ -14,10 +14,11 @@ Because of that, the cards like Jack (J), Queen (Q) and King (K) have their weig
 ## Goals
 - [x] Write basic Model's logic
 - [x] Make an interaction for players's table
-- [x] Get rid of setting font for View's labels
-- [ ] Unite the Model and the View using Controller
-- [ ] Remove unnecessary 'TurnStatement' enum and make the code easier
+- [x] Unite the Model and the View using Controller
 - [ ] Add the i18n to the application
+- [ ] Add a functional of choosing the game settings before play
+- [ ] Add a text field for game history
+- [ ] Add a GUI support for multiplayer (on one machine)
 
 ## Disclaimer
 The author **does not** appreciate gambling, so the development of this program wasn't in his plans. It was a customer's desire. But anyway, this development gave the author the new experience in programming. The author was honestly trying (and he still tries) to make a good, handy design of the program, therefore please, give your feedback. Thank you!
