@@ -10,7 +10,7 @@ public class Computer extends CardPlayer {
     // These attributes impact on computer's decisions
     private static final Random _random;
     private static final int _maxPossibility = 100;
-    private static final int[] _possibilityPercentages = { 90, 70, 40 };
+    private static final int[] _possibilityPercentages = { 95, 80, 40 };
 
     // Static fields initialization ::
 
