@@ -5,39 +5,30 @@ import view.Application;
 import view.LayeredPane;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.Vector;
 
 public class Controller {
-    // Attributes ::
-
-    private GameModel _model;
-    private Application _view;
-
-    // Constructor ::
+    private GameModel model;
+    private Application view;
 
     public Controller(GameModel model, Application view) {
-        _model = model;
-        _view = view;
+        this.model = model;
+        this.view = view;
 
-        view.addButtonClickListener(new ButtonClickListener());
+        this.view.addButtonClickListener(new ButtonClickListener());
     }
 
-    // Inner class(es) ::
-
     public class ButtonClickListener implements ActionListener {
-        // Attributes ::
-
         public static final String NEW_GAME = "NEW_GAME";
         public static final String EXIT_GAME = "EXIT_GAME";
         public static final String EXIT_GAME_NO_DIALOG = "EXIT_GAME_NO_DIALOG";
         public static final String LAUNCH_APP = "LAUNCH_APP";
         public static final String GET_CARD = "GET_CARD";
         public static final String PASS_ROUND = "PASS_ROUND";
+        public static final String HOW_TO_PLAY = "HOW_TO_PLAY";
         public static final String ABOUT = "ABOUT";
 
-        // Methods ::
 
         private ImageIcon getCardImage(Card card) {
             String cardName = card.getCardNameSymbol();
@@ -47,8 +38,8 @@ public class Controller {
         }
 
         private void pushCardToPane(LayeredPane targetPane, Vector<Card> targetDeck) {
-            if (_model.isCardDeckEmpty()) {
-                _view.showEmptyDeckWarningDialog();
+            if (model.isCardDeckEmpty()) {
+                view.showEmptyDeckWarningDialog();
                 return;
             }
 
@@ -56,9 +47,9 @@ public class Controller {
             int layerBoundY = targetPane.getBoundY();
             int layerPosition = targetPane.getLayerPosition();
 
-            Card card = _model.getCardFromCardDeck();
+            Card card = model.getCardFromCardDeck();
 
-            ImageIcon cardImage = this.getCardImage(card);
+            ImageIcon cardImage = getCardImage(card);
             JLabel label = new JLabel(cardImage);
             label.setBounds(
                     layerBoundX, layerBoundY,
@@ -72,17 +63,17 @@ public class Controller {
         }
 
         private void invokeGameRoutine() {
-            if (_view.containsInitPanel())
-                _view.launchApplication();
+            if (view.containsInitPanel())
+                view.launchApplication();
 
-            if (_model.isRun()) {
-                int response = _view.showNewGameDialog();
+            if (model.isRun()) {
+                int response = view.showNewGameDialog();
 
                 switch (response) {
                     // if user wants to reload the game
                     case 0:
-                        _model.reload();
-                        _view.reloadPanes();
+                        model.reload();
+                        view.reloadPanes();
                         break;
                     // if user does not want to do so
                     case 1:
@@ -90,41 +81,35 @@ public class Controller {
                 }
             }
 
-            _model.run();
+            model.run();
 
             this.pushCardToPane(
-                    _view.getDealerPane(),
-                    _model.getCardPlayer(0).getCardDeck());
+                    view.getDealerPane(),
+                    model.getCardPlayer(0).getCardDeck());
 
             this.pushCardToPane(
-                    _view.getPlayerPane(),
-                    _model.getCardPlayer(1).getCardDeck());
+                    view.getPlayerPane(),
+                    model.getCardPlayer(1).getCardDeck());
 
             this.refreshDynamicFields();
 
-            _view.getCardDeckButton().setEnabled(true);
-            _view.getHitButton().setEnabled(true);
-            _view.getStandButton().setEnabled(true);
+            view.switchInteractButtons(true);
         }
 
         private void refreshDynamicFields() {
-            _view.getDealerTotalPtsLabel().setText(
-                    Integer.toString(_model.getCardPlayer(0).getPointsAmount()));
+            view.getDealerTotalPtsLabel().setText(
+                    Integer.toString(model.getCardPlayer(0).getPointsAmount()));
 
-            _view.getPlayerTotalPtsLabel().setText(
-                    Integer.toString(_model.getCardPlayer(1).getPointsAmount()));
-
-            _view.getCardDeckSizeLabel().setText(
-                    Integer.toString(_model.getCardDeckSize()));
+            view.getPlayerTotalPtsLabel().setText(
+                    Integer.toString(model.getCardPlayer(1).getPointsAmount()));
         }
 
-        // Apparently, this method is used here temporarily
-        // (may be it's not)
+        // Apparently, this method is used here temporarily (may be it's not)
         private void processUserResponse(int response) {
             switch (response) {
                 // if user wants to play the game again
                 case 0:
-                    this.invokeGameRoutine();
+                    invokeGameRoutine();
                     break;
                 // if user wants to quit
                 case 1:
@@ -133,19 +118,19 @@ public class Controller {
         }
 
         private void winDialog(CardPlayer wonPlayer) {
-            int response = _view.showWinGameDialog(wonPlayer.getPlayerName());
+            int response = view.showWinGameDialog(wonPlayer.getPlayerName());
 
             processUserResponse(response);
         }
 
         private void exceedDialog(CardPlayer exceededPlayer) {
-            int response = _view.showLoseGameDialog(exceededPlayer.getPlayerName());
+            int response = view.showLoseGameDialog(exceededPlayer.getPlayerName());
 
             processUserResponse(response);
         }
 
         private void exitDialog() {
-            int response = _view.showExitDialog();
+            int response = view.showExitDialog();
 
             switch (response) {
                 case 0:
@@ -156,41 +141,62 @@ public class Controller {
         }
 
         private void checkComputerCondition(CardPlayer computer) {
-            computer.analyzeTurn();
+            Timer timer = new Timer(800, null);
 
-            if (computer.hasPassed())
-                JOptionPane.showMessageDialog(_view, computer.getPlayerName() + " has passed.");
-            else if (computer.hasExceeded())
-                JOptionPane.showMessageDialog(_view, computer.getPlayerName() + " has exceeded the points limit.");
-            else if (computer.hasWon())
-                JOptionPane.showMessageDialog(_view, computer.getPlayerName() + " has won!");
-            else {
-                this.addCardFromDeck(0);
-                this.checkComputerCondition(computer);
-            }
+            timer.addActionListener(actionEvent -> {
+                computer.analyzeTurn();
+
+                if (computer.hasPassed() || computer.hasWon() || computer.hasExceeded()) {
+                    timer.stop();
+
+                    if (computer.hasPassed())
+                        JOptionPane.showMessageDialog(view, computer.getPlayerName() + " has passed.");
+                    else if (computer.hasExceeded())
+                        JOptionPane.showMessageDialog(view, computer.getPlayerName() + " has exceeded the points limit.");
+                    else if (computer.hasWon())
+                        JOptionPane.showMessageDialog(view, computer.getPlayerName() + " has won!");
+                }
+                else
+                    addCardFromDeck(0);
+            });
+
+            timer.start();
         }
 
         private void checkCondition(CardPlayer cardPlayer) {
             cardPlayer.analyzeTurn();
 
             if (cardPlayer.hasExceeded())
-                this.exceedDialog(cardPlayer);
+                exceedDialog(cardPlayer);
             else if (cardPlayer.hasWon())
-                this.winDialog(cardPlayer);
+                winDialog(cardPlayer);
         }
 
         private void addCardFromDeck(int playerIndex) {
             // lame logic (temporarily):
             if (playerIndex == 0)
-                this.pushCardToPane(
-                    _view.getDealerPane(),
-                    _model.getCardPlayer(playerIndex).getCardDeck());
+                pushCardToPane(
+                    view.getDealerPane(),
+                    model.getCardPlayer(playerIndex).getCardDeck());
             else
-                this.pushCardToPane(
-                    _view.getPlayerPane(),
-                    _model.getCardPlayer(playerIndex).getCardDeck());
+                pushCardToPane(
+                    view.getPlayerPane(),
+                    model.getCardPlayer(playerIndex).getCardDeck());
 
-            this.refreshDynamicFields();
+            refreshDynamicFields();
+        }
+
+        private void getPlayersTable() {
+            Vector<String> table = new Vector<>();
+
+            for (CardPlayer cardPlayer : model.getCardPlayers()) {
+                String message = cardPlayer.isDealer()
+                        ? "[Dealer] " + cardPlayer.getPlayerName()
+                        : cardPlayer.getPlayerName();
+                message = message + ": " + cardPlayer.getPointsAmount();
+
+                table.add(message);
+            }
         }
 
         @Override
@@ -199,27 +205,27 @@ public class Controller {
 
             switch (command) {
                 case NEW_GAME:
-                    this.invokeGameRoutine();
+                    invokeGameRoutine();
                     break;
                 case EXIT_GAME:
-                    this.exitDialog();
+                    exitDialog();
                     break;
                 case EXIT_GAME_NO_DIALOG:
                     System.exit(0);
                     break;
                 case LAUNCH_APP:
-                    _view.launchApplication();
+                    view.launchApplication();
                     break;
                 case GET_CARD:
-                    this.addCardFromDeck(1);
-                    this.checkCondition(_model.getCardPlayer(1));
+                    addCardFromDeck(1);
+                    checkCondition(model.getCardPlayer(1));
                     break;
                 case PASS_ROUND:
-                    _view.disableInteractButtons();
-                    this.checkComputerCondition(_model.getCardPlayer(0));
+                    view.switchInteractButtons(false);
+                    checkComputerCondition(model.getCardPlayer(0));
                     break;
                 case ABOUT:
-                    _view.showAboutDialog();
+                    view.showAboutDialog();
                     break;
             }
         }
