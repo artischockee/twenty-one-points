@@ -3,8 +3,6 @@ package model;
 import java.util.*;
 
 public class GameModel {
-    // Attributes ::
-
     public static final int DECK_SIZE = 36;
     public static final int MAX_SCORE = 21;
     public static final int MAX_DEALER_TOTAL = 17;
@@ -17,83 +15,78 @@ public class GameModel {
             CardDeckCreator.getWeights21(),
             Comparator.comparingInt(Integer::intValue));
 
-    private Stack<Card> _cardDeck;
-    private Vector<CardPlayer> _cardPlayers;
-    private boolean _isRun;
+    private Stack<Card> cardDeck;
+    private Vector<CardPlayer> cardPlayers;
+    private boolean isRun;
 
-    // Constructor ::
 
     public GameModel() throws IllegalArgumentException {
-        _cardDeck = CardDeckCreator.createDeck(DECK_SIZE);
-        _cardPlayers = new Vector<>();
-        _isRun = false;
+        cardDeck = CardDeckCreator.createDeck(DECK_SIZE);
+        cardPlayers = new Vector<>();
+        isRun = false;
     }
 
 
-    // Getters and setters ::
-
     public Card getCardFromCardDeck() throws EmptyStackException {
-        if (_cardDeck.isEmpty())
+        if (cardDeck.isEmpty())
             throw new EmptyStackException();
 
-        return _cardDeck.pop();
+        return cardDeck.pop();
     }
 
     public Stack<Card> getCardDeck() {
-        return _cardDeck;
+        return cardDeck;
     }
 
     public int getCardDeckSize() {
-        return _cardDeck.size();
+        return cardDeck.size();
     }
 
     public boolean isCardDeckEmpty() {
-        return _cardDeck.isEmpty();
+        return cardDeck.isEmpty();
     }
 
     public Vector<CardPlayer> getCardPlayers() {
-        return _cardPlayers;
+        return cardPlayers;
     }
 
     public CardPlayer getCardPlayer(int playerIndex) throws IndexOutOfBoundsException {
-        if (playerIndex < 0 || playerIndex >= _cardPlayers.size())
+        if (playerIndex < 0 || playerIndex >= cardPlayers.size())
             throw new IndexOutOfBoundsException(
                 "getCardPlayer: invalid argument 'playerIndex'");
 
-        return _cardPlayers.elementAt(playerIndex);
+        return cardPlayers.elementAt(playerIndex);
     }
 
     public boolean isRun() {
-        return _isRun;
+        return isRun;
     }
 
 
-    // Methods ::
-
     public void reload() {
-        _cardDeck = CardDeckCreator.createDeck(DECK_SIZE);
-        _cardPlayers.clear();
+        cardDeck = CardDeckCreator.createDeck(DECK_SIZE);
+        cardPlayers.clear();
 
         // poor logic because there is no way to make
         // abstract static method in CardPlayer class
+        // (should probably use interface for that purpose)
         Computer.resetPlayerIndex();
         Player.resetPlayerIndex();
     }
 
     public void shuffleDeck() {
-        Collections.shuffle(_cardDeck);
+        Collections.shuffle(cardDeck);
     }
 
     public void appendPlayers() {
-        _cardPlayers.add(new Computer());
-        _cardPlayers.add(new Player());
-        _cardPlayers.elementAt(0).setDealer(true);
+        cardPlayers.add(new Computer());
+        cardPlayers.add(new Player());
+        cardPlayers.elementAt(0).setDealer(true);
     }
 
     public void run() {
-        this.shuffleDeck();
-        this.appendPlayers();
-
-        _isRun = true;
+        shuffleDeck();
+        appendPlayers();
+        isRun = true;
     }
 }
