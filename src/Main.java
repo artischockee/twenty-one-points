@@ -3,6 +3,7 @@ import model.GameModel;
 import view.Application;
 
 import javax.swing.*;
+import java.util.Locale;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,7 +13,8 @@ public class Main {
             SwingUtilities.invokeLater(() -> {
                 try {
                     GameModel model = new GameModel();
-                    Application view = new Application(model);
+                    Application view = new Application(model, new Locale("en", "US"));
+//                    Application view = new Application(model, new Locale("ru", "RU"));
                     new Controller(model, view);
 
                     view.setVisible(true);
