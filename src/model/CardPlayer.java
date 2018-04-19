@@ -11,6 +11,7 @@ public abstract class CardPlayer {
     private boolean _hasExceeded;
     private boolean _hasWon;
 
+
     CardPlayer(String playerName) {
         if (playerName == null || playerName.isEmpty())
             _playerName = this.getClass().getName();
@@ -19,6 +20,7 @@ public abstract class CardPlayer {
         _playerName = playerName;
         _isDealer = _hasPassed = _hasExceeded = _hasWon = false;
     }
+
 
     public Vector<Card> getCardDeck() {
         return _cardDeck;

@@ -224,6 +224,9 @@ public class Controller {
                     view.switchInteractButtons(false);
                     checkComputerCondition(model.getCardPlayer(0));
                     break;
+                case HOW_TO_PLAY:
+//                    view.showHowToPlayDialog();
+                    break;
                 case ABOUT:
                     view.showAboutDialog();
                     break;
