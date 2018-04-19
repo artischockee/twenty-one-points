@@ -9,14 +9,13 @@ class GBConstraints extends GridBagConstraints {
     }
 
     GBConstraints(int gridx, int gridy, int fill) {
-        this(fill);
-        this.gridx = gridx;
-        this.gridy = gridy;
+        this(gridx, gridy);
+        this.fill = fill;
     }
 
-    GBConstraints(int fill, Insets insets) {
-        this(fill);
-        this.insets = insets;
+    GBConstraints(int gridx, int gridy) {
+        this.gridx = gridx;
+        this.gridy = gridy;
     }
 
     GBConstraints(int fill) {
@@ -29,6 +28,8 @@ class GBConstraints extends GridBagConstraints {
         this.weightx = 0;
         this.weighty = 0;
     }
+
+    GBConstraints() {}
 
     void reset() {
         this.gridx = 0;
