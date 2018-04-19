@@ -49,9 +49,29 @@ final class GuiCreator {
         return panel;
     }
 
-    static LayeredPane createLayeredPane(Dimension dimension, float alignmentX) {
-        LayeredPane layeredPane = new LayeredPane();
+    static LayeredPane createLayeredPane(Dimension dimension, float alignmentX, float alignmentY) {
+        LayeredPane layeredPane = createLayeredPane(alignmentX, alignmentY);
         layeredPane.setPreferredSize(dimension);
+
+        return layeredPane;
+    }
+
+    static LayeredPane createLayeredPane(float alignmentX, float alignmentY) {
+        LayeredPane layeredPane = createLayeredPane(alignmentX);
+        layeredPane.setAlignmentY(alignmentY);
+
+        return layeredPane;
+    }
+
+    static LayeredPane createLayeredPane(Dimension dimension, float alignmentX) {
+        LayeredPane layeredPane = createLayeredPane(alignmentX);
+        layeredPane.setPreferredSize(dimension);
+
+        return layeredPane;
+    }
+
+    static LayeredPane createLayeredPane(float alignmentX) {
+        LayeredPane layeredPane = new LayeredPane();
         layeredPane.setAlignmentX(alignmentX);
 
         return layeredPane;
