@@ -4,7 +4,6 @@ import model.*;
 import controller.Controller;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -12,27 +11,21 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class Application extends JFrame {
-    // Attributes ::
-
     private GameModel model;
 
     private Locale appLocale;
     private ResourceBundle resBundle;
 
-    private final int FRAME_WIDTH = 800;
-    private final int FRAME_HEIGHT = 600;
-    private final int GRID_GAP = 8;
+    private final int FRAME_WIDTH = 720;
+    private final int FRAME_HEIGHT = 500;
 
     private final Image appIcon = Toolkit.getDefaultToolkit().getImage("resources/favicon.png");
 
     private JPanel mainPanel;
 
     // Application's menu bar:
-    private JMenuBar _menuBar;
-    private JMenu gameMenu;
     private JMenuItem playGameMenuItem;
     private JMenuItem exitGameMenuItem;
-    private JMenu helpMenu;
     private JMenuItem howToPlayMenuItem;
     private JMenuItem aboutMenuItem;
 
@@ -66,8 +59,6 @@ public class Application extends JFrame {
     private JButton initExitButton;
 
 
-    // Constructor ::
-
     public Application(GameModel model, Locale locale) throws IllegalArgumentException {
         super("21 Points - The Game");
 
@@ -83,8 +74,7 @@ public class Application extends JFrame {
 
         mainPanel = GuiCreator.createPanel(
                 new GridBagLayout(),
-                new Dimension(FRAME_WIDTH, FRAME_HEIGHT),
-                new EmptyBorder(GRID_GAP, GRID_GAP, GRID_GAP, GRID_GAP));
+                new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
         mainPanel.setMaximumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 
         assembleMenuBar();
@@ -97,8 +87,6 @@ public class Application extends JFrame {
         this.pack();
     }
 
-
-    // Getters and setters ::
 
     public LayeredPane getDealerPane() {
         return dealerCardsPane;
@@ -117,8 +105,6 @@ public class Application extends JFrame {
     }
 
 
-    // Methods ::
-
     public void launchApplication() {
         mainPanel.remove(initPanel);
         windowAssembly();
@@ -133,12 +119,10 @@ public class Application extends JFrame {
         return mainPanel.isAncestorOf(initPanel);
     }
 
-    // Assemble methods:
-
     private void assembleMenuBar() {
-        _menuBar = new JMenuBar();
+        JMenuBar menuBar = new JMenuBar();
 
-        gameMenu = new JMenu(resBundle.getString("game"));
+        JMenu gameMenu = new JMenu(resBundle.getString("game"));
         gameMenu.setMnemonic(KeyEvent.VK_G);
 
         playGameMenuItem = new JMenuItem(resBundle.getString("play-game"));
@@ -147,7 +131,7 @@ public class Application extends JFrame {
         exitGameMenuItem = new JMenuItem(resBundle.getString("exit"));
         exitGameMenuItem.setActionCommand(Controller.ButtonClickListener.EXIT_GAME_NO_DIALOG);
 
-        helpMenu = new JMenu(resBundle.getString("help"));
+        JMenu helpMenu = new JMenu(resBundle.getString("help"));
         helpMenu.setMnemonic(KeyEvent.VK_H);
 
         howToPlayMenuItem = new JMenuItem(resBundle.getString("how-to-play"));
@@ -158,59 +142,55 @@ public class Application extends JFrame {
 
         gameMenu.add(playGameMenuItem);
         gameMenu.add(exitGameMenuItem);
+        helpMenu.add(howToPlayMenuItem);
         helpMenu.add(aboutMenuItem);
 
-        _menuBar.add(gameMenu);
-        _menuBar.add(helpMenu);
+        menuBar.add(gameMenu);
+        menuBar.add(helpMenu);
 
-        this.setJMenuBar(_menuBar);
+        this.setJMenuBar(menuBar);
     }
 
     private void assembleGameDeskPanel() {
+        int paneOptimalWidth = 203; // calculated based on the card image (83x128), plus offset (=30)
+        int paneOptimalHeight = 128; // because card height is equal to 128 pixels
+        Dimension optimalDimension = new Dimension(paneOptimalWidth, paneOptimalHeight);
+
         // Main panel:
 
         gameDeskPanel = GuiCreator.createPanel(new GridLayout(2, 1));
 
         // Sub-panel (top):
 
-        dealerPanel = GuiCreator.createPanel(
-                new BorderLayout(),
-                BorderFactory.createTitledBorder(resBundle.getString("dealer-deck")));
+        dealerPanel = GuiCreator.createPanel(new GridBagLayout());
 
-        // TODO: 4/18/18 what if I remove Dimension here?
         dealerCardsPane = GuiCreator.createLayeredPane(
-                new Dimension(dealerPanel.getWidth(), dealerPanel.getHeight()),
-                Component.CENTER_ALIGNMENT);
+                optimalDimension, Component.CENTER_ALIGNMENT);
 
         dealerPointsPanel = new JPanel();
-
         dealerPointsPanel.add(new JLabel(resBundle.getString("total-pts-dealer")));
 
         dealerTotalPtsLabel = new JLabel();
         dealerPointsPanel.add(dealerTotalPtsLabel);
 
-        dealerPanel.add(dealerCardsPane, BorderLayout.CENTER);
-        dealerPanel.add(dealerPointsPanel, BorderLayout.PAGE_END);
+        dealerPanel.add(dealerCardsPane, new GBConstraints(0, 0, GridBagConstraints.BOTH));
+        dealerPanel.add(dealerPointsPanel, new GBConstraints(0, 1, GridBagConstraints.BOTH));
 
         // Sub-panel (bottom):
 
-        playersPanel = GuiCreator.createPanel(
-                new BorderLayout(),
-                BorderFactory.createTitledBorder(resBundle.getString("player-deck")));
+        playersPanel = GuiCreator.createPanel(new GridBagLayout());
 
         playerCardsPane = GuiCreator.createLayeredPane(
-                new Dimension(playersPanel.getWidth(), playersPanel.getHeight()),
-                Component.CENTER_ALIGNMENT);
+                optimalDimension, Component.CENTER_ALIGNMENT);
 
         playerPointsPanel = new JPanel();
-
         playerPointsPanel.add(new JLabel(resBundle.getString("total-pts-player")));
 
         playerTotalPtsLabel = new JLabel();
         playerPointsPanel.add(playerTotalPtsLabel);
 
-        playersPanel.add(playerCardsPane, BorderLayout.CENTER);
-        playersPanel.add(playerPointsPanel, BorderLayout.PAGE_END);
+        playersPanel.add(playerCardsPane, new GBConstraints(0, 0, GridBagConstraints.BOTH));
+        playersPanel.add(playerPointsPanel, new GBConstraints(0, 1, GridBagConstraints.BOTH));
 
         // Adding all the elements from above to the game desk panel:
 
@@ -404,6 +384,7 @@ public class Application extends JFrame {
 
         playGameMenuItem.addActionListener(actionListener);
         exitGameMenuItem.addActionListener(actionListener);
+        howToPlayMenuItem.addActionListener(actionListener);
         aboutMenuItem.addActionListener(actionListener);
 
         playButton.addActionListener(actionListener);
