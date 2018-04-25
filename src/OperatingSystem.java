@@ -1,5 +1,8 @@
+//
 // This class is used for detecting an OS name that the application is run on.
 // It returns the absolute path to native (for the OS) look and feel in java.swing library
+//
+
 final class OperatingSystem {
     public static final String OS_NAME = System.getProperty("os.name");
 
