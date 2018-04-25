@@ -7,6 +7,17 @@ import java.awt.*;
 final class GuiCreator {
     private GuiCreator() {}
 
+    static JTextArea createTextArea(String text, boolean lineWrap, boolean opaque, boolean editable) {
+        JTextArea textArea = new JTextArea(text);
+
+        textArea.setLineWrap(lineWrap);
+        textArea.setWrapStyleWord(true);
+        textArea.setOpaque(opaque);
+        textArea.setEditable(editable);
+
+        return textArea;
+    }
+
     static JLabel createLabel(String text, int horizontalAlignment, Font font) {
         JLabel label = new JLabel(text, horizontalAlignment);
         label.setFont(font);
@@ -50,8 +61,8 @@ final class GuiCreator {
     }
 
     static LayeredPane createLayeredPane(Dimension dimension, float alignmentX, float alignmentY) {
-        LayeredPane layeredPane = createLayeredPane(alignmentX, alignmentY);
-        layeredPane.setPreferredSize(dimension);
+        LayeredPane layeredPane = createLayeredPane(dimension, alignmentX);
+        layeredPane.setAlignmentY(alignmentY);
 
         return layeredPane;
     }
@@ -64,8 +75,8 @@ final class GuiCreator {
     }
 
     static LayeredPane createLayeredPane(Dimension dimension, float alignmentX) {
-        LayeredPane layeredPane = createLayeredPane(alignmentX);
-        layeredPane.setPreferredSize(dimension);
+        LayeredPane layeredPane = createLayeredPane(dimension);
+        layeredPane.setAlignmentX(alignmentX);
 
         return layeredPane;
     }
@@ -73,6 +84,13 @@ final class GuiCreator {
     static LayeredPane createLayeredPane(float alignmentX) {
         LayeredPane layeredPane = new LayeredPane();
         layeredPane.setAlignmentX(alignmentX);
+
+        return layeredPane;
+    }
+
+    static LayeredPane createLayeredPane(Dimension dimension) {
+        LayeredPane layeredPane = new LayeredPane();
+        layeredPane.setPreferredSize(dimension);
 
         return layeredPane;
     }
