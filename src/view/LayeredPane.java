@@ -1,17 +1,17 @@
 package view;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class LayeredPane extends JLayeredPane {
-    // Attributes ::
-
     public static final int OFFSET = 30;
+    public static final int DEFAULT_CARD_WIDTH = 84;
+    public static final int DEFAULT_CARD_HEIGHT = 128;
 
     private int _boundx;
     private int _boundy;
     private int _layerPosition;
 
-    // Constructor ::
 
     public LayeredPane() {
         super();
@@ -21,8 +21,6 @@ public class LayeredPane extends JLayeredPane {
         _layerPosition = 0;
     }
 
-
-    // Accessors (get/set) ::
 
     public int getBoundX() {
         return _boundx;
@@ -49,10 +47,9 @@ public class LayeredPane extends JLayeredPane {
     }
 
 
-    // Methods ::
-
     public void reset() {
         this.removeAll();
+        this.setPreferredSize(new Dimension(DEFAULT_CARD_WIDTH, DEFAULT_CARD_HEIGHT));
         this.revalidate();
         this.repaint();
 
