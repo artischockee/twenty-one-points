@@ -5,7 +5,6 @@ import view.Application;
 import view.LayeredPane;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
 
@@ -29,7 +28,7 @@ public class Controller {
         public static final String HOW_TO_PLAY = "HOW_TO_PLAY";
         public static final String ABOUT = "ABOUT";
 
-
+        // TODO: 4/25/18 Replace it from here
         private ImageIcon getCardImage(Card card) {
             String cardName = card.getCardNameSymbol();
             String cardSuit = card.getSuitShortNotation();
@@ -43,61 +42,60 @@ public class Controller {
                 return;
             }
 
-            int layerBoundX = targetPane.getBoundX();
-            int layerBoundY = targetPane.getBoundY();
-            int layerPosition = targetPane.getLayerPosition();
-
             Card card = model.getCardFromCardDeck();
 
             ImageIcon cardImage = getCardImage(card);
+
+            int layerBoundX = targetPane.getBoundX();
+            int layerBoundY = targetPane.getBoundY();
+
             JLabel label = new JLabel(cardImage);
             label.setBounds(layerBoundX, layerBoundY,
                 cardImage.getIconWidth(), cardImage.getIconHeight());
 
-            targetDeck.add(card);
+            targetDeck.add(card); // send card to Model
+            targetPane.add(label); // send card to View
 
-            targetPane.add(label, Integer.valueOf(layerPosition));
-            targetPane.setLayerPosition(++layerPosition);
-            targetPane.setBoundX(layerBoundX + LayeredPane.OFFSET);
-
-            // Crutches and bicycles:
-            if (targetPane.getWidth() > cardImage.getIconWidth() + 10)
-                targetPane.setPreferredSize(new Dimension(
-                    targetPane.getWidth() + LayeredPane.OFFSET,
-                    LayeredPane.DEFAULT_CARD_HEIGHT));
+            if (layerBoundX >= LayeredPane.OFFSET)
+                targetPane.increaseWidth();
         }
 
         private void invokeGameRoutine() {
             if (view.containsInitPanel())
                 view.launchApplication();
 
-            // TODO: 4/25/18 Eliminate instant asking about new game in some situations
-            if (model.isRun()) {
+            if (model.isRun() && view.interactButtonsAreEnabled()) {
                 int response = view.showNewGameDialog();
 
                 switch (response) {
-                    // if user wants to reload the game
+                    // if user wants to reload the game:
                     case 0:
                         model.reload();
                         view.reloadPanes();
                         break;
-                    // if user does not want to do so
+                    // if user does not want to do so:
                     case 1:
                         return;
                 }
             }
+            else if (!view.interactButtonsAreEnabled()) {
+                model.reload();
+                view.reloadPanes();
+            }
 
             model.run();
 
-            this.pushCardToDeck(
+            pushCardToDeck(
                 view.getDealerCardsPane(),
-                model.getCardPlayer(0).getCardDeck());
+                model.getCardPlayer(0).getCardDeck()
+            );
 
-            this.pushCardToDeck(
+            pushCardToDeck(
                 view.getPlayerCardsPane(),
-                model.getCardPlayer(1).getCardDeck());
+                model.getCardPlayer(1).getCardDeck()
+            );
 
-            this.refreshDynamicFields();
+            refreshDynamicFields();
 
             view.switchInteractButtons(true);
         }
@@ -171,6 +169,9 @@ public class Controller {
 
         private void checkCondition(CardPlayer cardPlayer) {
             cardPlayer.analyzeTurn();
+
+            if (cardPlayer.hasExceeded() || cardPlayer.hasWon())
+                view.switchInteractButtons(false);
 
             if (cardPlayer.hasExceeded())
                 exceedDialog(cardPlayer);
