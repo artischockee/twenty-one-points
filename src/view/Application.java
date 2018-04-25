@@ -1,26 +1,27 @@
 package view;
 
-import model.*;
 import controller.Controller;
+import model.GameModel;
+import model.ResBundle;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class Application extends JFrame {
+    public static final int FRAME_WIDTH = 720;
+    public static final int FRAME_HEIGHT = 500;
+
+    private final Image appIcon = ImageIO.read(new File("resources/favicon.png"));
+
     private GameModel model;
-
-    private Locale appLocale;
     private ResourceBundle resBundle;
-
-    private final int FRAME_WIDTH = 720;
-    private final int FRAME_HEIGHT = 500;
-
-    private final Image appIcon = Toolkit.getDefaultToolkit().getImage("resources/favicon.png");
-
     private JPanel mainPanel;
 
     // Application's menu bar:
@@ -29,42 +30,38 @@ public class Application extends JFrame {
     private JMenuItem howToPlayMenuItem;
     private JMenuItem aboutMenuItem;
 
-    // All the primary panels on which the main action takes place:
-    private JPanel gameDeskPanel; // aka 'left panel'
-    private JPanel controlsPanel; // aka 'right panel'
+    // The primary panels on which the main action takes place:
+    private JPanel gameDeskPanel; // i.e. 'left panel'
+    private JPanel controlsPanel; // i.e. 'right panel'
 
-    // TODO: 4/18/18 write new comment accordingly to the content
-
-    private JPanel dealerPanel;
+    // Elements of the gameDeskPanel (top):
     private LayeredPane dealerCardsPane;
-    private JPanel dealerPointsPanel;
     private JLabel dealerTotalPtsLabel;
 
-    private JPanel playersPanel;
+    // Elements of the gameDeskPanel (bottom):
     private LayeredPane playerCardsPane;
-    private JPanel playerPointsPanel;
     private JLabel playerTotalPtsLabel;
 
+    // Elements of the controlsPanel (top):
     private JPanel gameLogPanel;
     private JTextArea gameLogArea;
     private JPanel controlButtonsPanel;
 
+    // Elements of the controlsPanel (bottom):
     private JButton playButton;
     private JButton hitButton;
     private JButton standButton;
     private JButton exitButton;
 
-    // Initial panel and its interactive elements:
+    // Elements of the initial panel:
     private JPanel initPanel;
     private JButton initLaunchButton;
     private JButton initExitButton;
 
-
-    public Application(GameModel model, Locale locale) throws IllegalArgumentException {
+    public Application(GameModel model, Locale locale) throws IllegalArgumentException, IOException {
         super("21 Points - The Game");
 
-        appLocale = locale;
-        resBundle = ResBundle.getBundle("resources/MessageBundle", appLocale);
+        resBundle = ResBundle.getBundle("resources/MessageBundle", locale);
 
         this.setIconImage(appIcon);
         this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS));
@@ -85,7 +82,6 @@ public class Application extends JFrame {
         this.pack();
     }
 
-
     public LayeredPane getDealerCardsPane() {
         return dealerCardsPane;
     }
@@ -102,19 +98,36 @@ public class Application extends JFrame {
         return dealerTotalPtsLabel;
     }
 
+    public boolean interactButtonsAreEnabled() {
+        return hitButton.isEnabled() && standButton.isEnabled();
+    }
+
+    public boolean containsInitPanel() {
+        return mainPanel.isAncestorOf(initPanel);
+    }
 
     public void launchApplication() {
         mainPanel.remove(initPanel);
-        windowAssembly();
+
+        GBConstraints gbc = new GBConstraints(GridBagConstraints.BOTH);
+
+        gbc.weightx = 0.8D;
+        gbc.weighty = 1.0D;
+
+        mainPanel.add(gameDeskPanel, gbc);
+
+        gbc.weightx = 0.2D;
+        gbc.gridx = 1;
+
+        mainPanel.add(controlsPanel, gbc);
+
+        this.setContentPane(mainPanel);
+        this.pack();
     }
 
     public void switchInteractButtons(boolean state) {
         hitButton.setEnabled(state);
         standButton.setEnabled(state);
-    }
-
-    public boolean containsInitPanel() {
-        return mainPanel.isAncestorOf(initPanel);
     }
 
     private void assembleMenuBar() {
@@ -156,58 +169,63 @@ public class Application extends JFrame {
 
         // Sub-panel (top):
 
-        dealerPanel = GuiCreator.createPanel(new GridBagLayout());
+        JPanel dealerPanel = GuiCreator.createPanel(new GridBagLayout());
 
-        dealerCardsPane = GuiCreator.createLayeredPane(new Dimension(0, 128), Component.CENTER_ALIGNMENT);
+        dealerCardsPane = GuiCreator.createLayeredPane(
+            LayeredPane.DEFAULT_DIMENSION,
+            Component.CENTER_ALIGNMENT
+        );
 
-        dealerPointsPanel = new JPanel();
+        JPanel dealerPointsPanel = new JPanel();
         dealerPointsPanel.add(new JLabel(resBundle.getString("total-pts-dealer")));
 
         dealerTotalPtsLabel = new JLabel();
         dealerPointsPanel.add(dealerTotalPtsLabel);
 
-        dealerPanel.add(dealerCardsPane, new GBConstraints(0, 0, GridBagConstraints.BOTH));
-        dealerPanel.add(dealerPointsPanel, new GBConstraints(0, 1, GridBagConstraints.BOTH));
+        dealerPanel.add(dealerCardsPane, new GBConstraints(0, 0));
+        dealerPanel.add(dealerPointsPanel, new GBConstraints(0, 1));
 
         // Sub-panel (bottom):
 
-        playersPanel = GuiCreator.createPanel(new GridBagLayout());
+        JPanel playerPanel = GuiCreator.createPanel(new GridBagLayout());
 
         playerCardsPane = GuiCreator.createLayeredPane(
-            new Dimension(LayeredPane.DEFAULT_CARD_WIDTH, LayeredPane.DEFAULT_CARD_HEIGHT),
-            Component.CENTER_ALIGNMENT);
+            LayeredPane.DEFAULT_DIMENSION,
+            Component.CENTER_ALIGNMENT
+        );
 
-        playerPointsPanel = new JPanel();
+        JPanel playerPointsPanel = new JPanel();
         playerPointsPanel.add(new JLabel(resBundle.getString("total-pts-player")));
 
         playerTotalPtsLabel = new JLabel();
         playerPointsPanel.add(playerTotalPtsLabel);
 
-        playersPanel.add(playerCardsPane, new GBConstraints(0, 0, GridBagConstraints.BOTH));
-        playersPanel.add(playerPointsPanel, new GBConstraints(0, 1, GridBagConstraints.NONE));
+        playerPanel.add(playerCardsPane, new GBConstraints(0, 0));
+        playerPanel.add(playerPointsPanel, new GBConstraints(0, 1));
 
-        // Adding all the elements from above to the game desk panel:
+        // Adding all the elements from above to the gameDeskPanel:
 
         gameDeskPanel.add(dealerPanel);
-        gameDeskPanel.add(playersPanel);
+        gameDeskPanel.add(playerPanel);
     }
 
     private void assembleControlsPanel() {
-        // Main panel for this component:
+        // Main panel:
 
         controlsPanel = GuiCreator.createPanel(new GridLayout(2, 1));
 
-        // First (upper) sub-panel for the component:
+        // Sub-panel (top):
 
         gameLogPanel = GuiCreator.createPanel(new GridBagLayout(), BorderFactory.createTitledBorder("Game log"));
 
-//        gameLogArea = GuiCreator.createTextArea(
-//                "Hello world! My name is Artem Piskarev! I am developer of this app!",
-//                true, false, false);
-//
-//        gameLogPanel.add(gameLogArea, new GBConstraints(0, 0, GridBagConstraints.BOTH));
+        gameLogArea = GuiCreator.createTextArea(
+            "Hello world! My name is Artem Piskarev! I am developer of this app!",
+            true, false, false
+        );
 
-        // Second (lower) sub-panel for the component:
+        gameLogPanel.add(gameLogArea, new GBConstraints());
+
+        // Sub-panel (bottom):
 
         controlButtonsPanel = GuiCreator.createPanel(new GridBagLayout());
 
@@ -227,31 +245,28 @@ public class Application extends JFrame {
 
         // Placing the items with GridBagConstraints:
 
-        GridBagConstraints gbc = new GridBagConstraints();
+        GBConstraints gbc = new GBConstraints(GridBagConstraints.HORIZONTAL);
 
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
         gbc.ipady = 30;
         gbc.gridwidth = 2;
 
         controlButtonsPanel.add(hitButton, gbc);
 
-        gbc.gridy = 1;
         gbc.ipady = 0;
+        gbc.gridy = 1;
         gbc.insets = new Insets(4, 0, 0, 0);
 
         controlButtonsPanel.add(standButton, gbc);
 
         gbc.gridy = 2;
         gbc.gridwidth = 1;
-        gbc.insets = new Insets(15, 0, 0, 2);
+        gbc.insets = new Insets(8, 0, 0, 2);
         gbc.ipadx = 30;
 
         controlButtonsPanel.add(playButton, gbc);
 
         gbc.gridx = 1;
-        gbc.insets = new Insets(15, 2, 0, 0);
+        gbc.insets = new Insets(8, 2, 0, 0);
 
         controlButtonsPanel.add(exitButton, gbc);
 
@@ -275,38 +290,34 @@ public class Application extends JFrame {
         initExitButton = new JButton(resBundle.getString("exit"));
         initExitButton.setActionCommand(Controller.ButtonClickListener.EXIT_GAME);
 
-        initPanel.add(greetingsLabel, new GBConstraints(
-            0, 0, GridBagConstraints.BOTH, new Insets(0, 0, 32, 0)));
+        // Adding components to initPanel using GridBagConstraints:
 
-        initPanel.add(pictureLabel, new GBConstraints(
-            0, 1, GridBagConstraints.BOTH));
+        GBConstraints gbc = new GBConstraints(GridBagConstraints.BOTH);
 
-        initPanel.add(initLaunchButton, new GBConstraints(
-            0, 2, GridBagConstraints.BOTH, new Insets(16, 0, 0, 0)));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(0, 0, 32, 0);
 
-        initPanel.add(initExitButton, new GBConstraints(
-            0, 3, GridBagConstraints.BOTH, new Insets(4, 0, 0, 0)));
+        initPanel.add(greetingsLabel, gbc);
+
+        gbc.gridy = 1;
+        gbc.resetInsets();
+
+        initPanel.add(pictureLabel, gbc);
+
+        gbc.gridy = 2;
+        gbc.ipady = 30;
+        gbc.insets = new Insets(16, 0, 0, 0);
+
+        initPanel.add(initLaunchButton, gbc);
+
+        gbc.gridy = 3;
+        gbc.ipady = 5;
+        gbc.insets = new Insets(4, 0, 0, 0);
+
+        initPanel.add(initExitButton, gbc);
 
         mainPanel.add(initPanel);
-    }
-
-    // TODO: 4/18/18 To be renamed
-    public void windowAssembly() {
-        GridBagConstraints gbc = new GridBagConstraints();
-
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 0.7;
-        gbc.weighty = 1.0;
-
-        mainPanel.add(gameDeskPanel, gbc);
-
-        gbc.weightx = 0.3;
-        gbc.gridx = 1;
-
-        mainPanel.add(controlsPanel, gbc);
-
-        this.setContentPane(mainPanel);
-        this.pack();
     }
 
     public void reloadPanes() {
