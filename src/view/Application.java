@@ -1,7 +1,6 @@
 package view;
 
 import controller.Controller;
-import model.GameModel;
 import model.ResBundle;
 
 import javax.imageio.ImageIO;
@@ -20,8 +19,8 @@ public class Application extends JFrame {
 
     private final Image appIcon = ImageIO.read(new File("resources/favicon.png"));
 
-    private GameModel model;
     private ResourceBundle resBundle;
+    private ResourceBundle dialogs;
     private JPanel mainPanel;
 
     // Application's menu bar:
@@ -44,8 +43,6 @@ public class Application extends JFrame {
 
     // Elements of the controlsPanel (top):
     private JPanel gameLogPanel;
-    private JTextArea gameLogArea;
-    private JPanel controlButtonsPanel;
 
     // Elements of the controlsPanel (bottom):
     private JButton playButton;
@@ -58,17 +55,16 @@ public class Application extends JFrame {
     private JButton initLaunchButton;
     private JButton initExitButton;
 
-    public Application(GameModel model, Locale locale) throws IllegalArgumentException, IOException {
+    public Application(Locale locale) throws IllegalArgumentException, IOException {
         super("21 Points - The Game");
 
         resBundle = ResBundle.getBundle("resources/MessageBundle", locale);
+        dialogs = ResBundle.getBundle("resources/DialogMessages", locale);
 
         this.setIconImage(appIcon);
         this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationByPlatform(true);
-
-        this.model = model;
 
         mainPanel = GuiCreator.createPanel(new GridBagLayout(), new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 
@@ -133,22 +129,22 @@ public class Application extends JFrame {
     private void assembleMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
-        JMenu gameMenu = new JMenu(resBundle.getString("game"));
+        JMenu gameMenu = new JMenu(resBundle.getString("menu-game"));
         gameMenu.setMnemonic(KeyEvent.VK_G);
 
-        playGameMenuItem = new JMenuItem(resBundle.getString("play-game"));
+        playGameMenuItem = new JMenuItem(resBundle.getString("menu-item-play-game"));
         playGameMenuItem.setActionCommand(Controller.ButtonClickListener.NEW_GAME);
 
-        exitGameMenuItem = new JMenuItem(resBundle.getString("exit"));
+        exitGameMenuItem = new JMenuItem(resBundle.getString("common-exit"));
         exitGameMenuItem.setActionCommand(Controller.ButtonClickListener.EXIT_GAME_NO_DIALOG);
 
-        JMenu helpMenu = new JMenu(resBundle.getString("help"));
+        JMenu helpMenu = new JMenu(resBundle.getString("menu-help"));
         helpMenu.setMnemonic(KeyEvent.VK_H);
 
-        howToPlayMenuItem = new JMenuItem(resBundle.getString("how-to-play"));
+        howToPlayMenuItem = new JMenuItem(resBundle.getString("menu-item-how-to-play"));
         howToPlayMenuItem.setActionCommand(Controller.ButtonClickListener.HOW_TO_PLAY);
 
-        aboutMenuItem = new JMenuItem(resBundle.getString("about"));
+        aboutMenuItem = new JMenuItem(resBundle.getString("menu-item-about"));
         aboutMenuItem.setActionCommand(Controller.ButtonClickListener.ABOUT);
 
         gameMenu.add(playGameMenuItem);
@@ -177,7 +173,7 @@ public class Application extends JFrame {
         );
 
         JPanel dealerPointsPanel = new JPanel();
-        dealerPointsPanel.add(new JLabel(resBundle.getString("total-pts-dealer")));
+        dealerPointsPanel.add(new JLabel(resBundle.getString("label-total-pts-dealer")));
 
         dealerTotalPtsLabel = new JLabel();
         dealerPointsPanel.add(dealerTotalPtsLabel);
@@ -195,7 +191,7 @@ public class Application extends JFrame {
         );
 
         JPanel playerPointsPanel = new JPanel();
-        playerPointsPanel.add(new JLabel(resBundle.getString("total-pts-player")));
+        playerPointsPanel.add(new JLabel(resBundle.getString("label-total-pts-player")));
 
         playerTotalPtsLabel = new JLabel();
         playerPointsPanel.add(playerTotalPtsLabel);
@@ -216,31 +212,24 @@ public class Application extends JFrame {
 
         // Sub-panel (top):
 
-        gameLogPanel = GuiCreator.createPanel(new GridBagLayout(), BorderFactory.createTitledBorder("Game log"));
-
-        gameLogArea = GuiCreator.createTextArea(
-            "Hello world! My name is Artem Piskarev! I am developer of this app!",
-            true, false, false
-        );
-
-        gameLogPanel.add(gameLogArea, new GBConstraints());
+        gameLogPanel = GuiCreator.createPanel(new GridBagLayout());
 
         // Sub-panel (bottom):
 
-        controlButtonsPanel = GuiCreator.createPanel(new GridBagLayout());
+        JPanel controlButtonsPanel = GuiCreator.createPanel(new GridBagLayout());
 
-        hitButton = new JButton(resBundle.getString("take-card"));
+        hitButton = new JButton(resBundle.getString("button-hit"));
         hitButton.setActionCommand(Controller.ButtonClickListener.GET_CARD);
         hitButton.setEnabled(false);
 
-        standButton = new JButton(resBundle.getString("pass"));
+        standButton = new JButton(resBundle.getString("button-pass"));
         standButton.setActionCommand(Controller.ButtonClickListener.PASS_ROUND);
         standButton.setEnabled(false);
 
-        playButton = new JButton(resBundle.getString("new-game"));
+        playButton = new JButton(resBundle.getString("button-new-game"));
         playButton.setActionCommand(Controller.ButtonClickListener.NEW_GAME);
 
-        exitButton = new JButton(resBundle.getString("exit"));
+        exitButton = new JButton(resBundle.getString("common-exit"));
         exitButton.setActionCommand(Controller.ButtonClickListener.EXIT_GAME);
 
         // Placing the items with GridBagConstraints:
@@ -279,20 +268,20 @@ public class Application extends JFrame {
     private void assembleInitPanel() {
         initPanel = new JPanel(new GridBagLayout());
 
-        JLabel greetingsLabel = new JLabel(resBundle.getString("greetings"), JLabel.CENTER);
+        JLabel greetingsLabel = new JLabel(resBundle.getString("common-greetings"), JLabel.CENTER);
         greetingsLabel.setFont(greetingsLabel.getFont().deriveFont(16.0f));
 
         JLabel pictureLabel = new JLabel(new ImageIcon("resources/favicon.png"), JLabel.CENTER);
 
-        initLaunchButton = new JButton(resBundle.getString("launch-game"));
+        initLaunchButton = new JButton(resBundle.getString("common-launch-game"));
         initLaunchButton.setActionCommand(Controller.ButtonClickListener.NEW_GAME);
 
-        initExitButton = new JButton(resBundle.getString("exit"));
+        initExitButton = new JButton(resBundle.getString("common-exit"));
         initExitButton.setActionCommand(Controller.ButtonClickListener.EXIT_GAME);
 
         // Adding components to initPanel using GridBagConstraints:
 
-        GBConstraints gbc = new GBConstraints(GridBagConstraints.BOTH);
+        GBConstraints gbc = new GBConstraints();
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -306,13 +295,14 @@ public class Application extends JFrame {
         initPanel.add(pictureLabel, gbc);
 
         gbc.gridy = 2;
-        gbc.ipady = 30;
+        gbc.ipady = 25;
         gbc.insets = new Insets(16, 0, 0, 0);
+        gbc.fill = GridBagConstraints.BOTH;
 
         initPanel.add(initLaunchButton, gbc);
 
         gbc.gridy = 3;
-        gbc.ipady = 5;
+        gbc.ipady = 0;
         gbc.insets = new Insets(4, 0, 0, 0);
 
         initPanel.add(initExitButton, gbc);
@@ -328,59 +318,70 @@ public class Application extends JFrame {
     // JOptionPane's dialogs:
 
     public int showWinGameDialog(String winnerName) {
-        Object[] options = { "Play another game!", "Quit" };
+        Object[] options = {
+            dialogs.getString("common-play"),
+            dialogs.getString("common-quit")
+        };
 
         return JOptionPane.showOptionDialog(this,
-                winnerName + ", congratulations, you win in this game!\n" +
-                        "What are you going to do next?",
-                winnerName + " is our winner!",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null,
-                options, options[0]);
+            winnerName + ", " + dialogs.getString("win-1"),
+            winnerName + " " + dialogs.getString("win-2"),
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.INFORMATION_MESSAGE,
+            null,
+            options, options[0]
+        );
     }
 
     public int showLoseGameDialog(String loserName) {
-        Object[] options = { "Play another game!", "Quit" };
+        Object[] options = {
+                dialogs.getString("common-play"),
+                dialogs.getString("common-quit")
+        };
 
         return JOptionPane.showOptionDialog(this,
-                loserName + ", sorry, you lose in this game.\n" +
-                        "What are you going to do next?",
-                loserName + " has failed",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null,
-                options, options[1]);
+            loserName + ", " + dialogs.getString("lose-1"),
+            loserName + " " +  dialogs.getString("lose-2"),
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.INFORMATION_MESSAGE,
+            null,
+            options, options[1]
+        );
     }
 
     public int showExitDialog() {
         return JOptionPane.showConfirmDialog(this,
-                "Are you sure you want to quit the game?",
-                "Game quit",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE);
+            dialogs.getString("exit-1"),
+                dialogs.getString("exit-2"),
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE
+        );
     }
 
     public int showNewGameDialog() {
         return JOptionPane.showConfirmDialog(this,
-                "Current game will be reloaded. Are you sure?",
-                "New Game",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE);
+                dialogs.getString("new-game-1"),
+                dialogs.getString("new-game-2"),
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE
+        );
     }
 
+    // TODO: 4/25/18 Make it more informative and decent
     public void showAboutDialog() {
         JOptionPane.showMessageDialog(this,
             "Twenty-One Points Game.\nAuthor: Artem Piskarev",
             "About",
-            JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.INFORMATION_MESSAGE
+        );
     }
 
     public void showEmptyDeckWarningDialog() {
         JOptionPane.showMessageDialog(this,
-                "There are no cards left on the deck!",
-                "The card deck is empty",
-                JOptionPane.WARNING_MESSAGE);
+            dialogs.getString("empty-deck-1"),
+            dialogs.getString("empty-deck-2"),
+            JOptionPane.WARNING_MESSAGE
+        );
     }
 
     // ActionListeners:
