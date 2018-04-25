@@ -1,11 +1,14 @@
 package controller;
 
-import model.*;
+import model.Card;
+import model.CardPlayer;
+import model.GameModel;
 import view.Application;
 import view.LayeredPane;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
 
 public class Controller {
@@ -102,10 +105,12 @@ public class Controller {
 
         private void refreshDynamicFields() {
             view.getDealerTotalPtsLabel().setText(
-                    Integer.toString(model.getCardPlayer(0).getPointsAmount()));
+                Integer.toString(model.getCardPlayer(0).getPointsAmount())
+            );
 
             view.getPlayerTotalPtsLabel().setText(
-                    Integer.toString(model.getCardPlayer(1).getPointsAmount()));
+                Integer.toString(model.getCardPlayer(1).getPointsAmount())
+            );
         }
 
         // Apparently, this method is used here temporarily (may be it's not)
