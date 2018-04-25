@@ -31,6 +31,10 @@ class GBConstraints extends GridBagConstraints {
 
     GBConstraints() {}
 
+    void resetInsets() {
+        this.insets = new Insets(0, 0, 0, 0);
+    }
+
     void reset() {
         this.gridx = 0;
         this.gridy = 0;
