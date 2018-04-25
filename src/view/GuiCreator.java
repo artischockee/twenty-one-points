@@ -7,9 +7,8 @@ import java.awt.*;
 final class GuiCreator {
     private GuiCreator() {}
 
-    static JTextArea createTextArea(String text, boolean lineWrap, boolean opaque, boolean editable) {
-        JTextArea textArea = new JTextArea(text);
-
+    static JTextArea createTextArea(boolean lineWrap, boolean opaque, boolean editable) {
+        JTextArea textArea = new JTextArea();
         textArea.setLineWrap(lineWrap);
         textArea.setWrapStyleWord(true);
         textArea.setOpaque(opaque);
