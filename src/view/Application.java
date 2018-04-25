@@ -45,7 +45,8 @@ public class Application extends JFrame {
     private JPanel playerPointsPanel;
     private JLabel playerTotalPtsLabel;
 
-    private JPanel cardDeckPanel;
+    private JPanel gameLogPanel;
+    private JTextArea gameLogArea;
     private JPanel controlButtonsPanel;
 
     private JButton playButton;
@@ -72,10 +73,7 @@ public class Application extends JFrame {
 
         this.model = model;
 
-        mainPanel = GuiCreator.createPanel(
-                new GridBagLayout(),
-                new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
-        mainPanel.setMaximumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+        mainPanel = GuiCreator.createPanel(new GridBagLayout(), new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 
         assembleMenuBar();
         assembleGameDeskPanel();
@@ -88,11 +86,11 @@ public class Application extends JFrame {
     }
 
 
-    public LayeredPane getDealerPane() {
+    public LayeredPane getDealerCardsPane() {
         return dealerCardsPane;
     }
 
-    public LayeredPane getPlayerPane() {
+    public LayeredPane getPlayerCardsPane() {
         return playerCardsPane;
     }
 
@@ -152,10 +150,6 @@ public class Application extends JFrame {
     }
 
     private void assembleGameDeskPanel() {
-        int paneOptimalWidth = 203; // calculated based on the card image (83x128), plus offset (=30)
-        int paneOptimalHeight = 128; // because card height is equal to 128 pixels
-        Dimension optimalDimension = new Dimension(paneOptimalWidth, paneOptimalHeight);
-
         // Main panel:
 
         gameDeskPanel = GuiCreator.createPanel(new GridLayout(2, 1));
@@ -164,8 +158,7 @@ public class Application extends JFrame {
 
         dealerPanel = GuiCreator.createPanel(new GridBagLayout());
 
-        dealerCardsPane = GuiCreator.createLayeredPane(
-                optimalDimension, Component.CENTER_ALIGNMENT);
+        dealerCardsPane = GuiCreator.createLayeredPane(new Dimension(0, 128), Component.CENTER_ALIGNMENT);
 
         dealerPointsPanel = new JPanel();
         dealerPointsPanel.add(new JLabel(resBundle.getString("total-pts-dealer")));
@@ -181,7 +174,8 @@ public class Application extends JFrame {
         playersPanel = GuiCreator.createPanel(new GridBagLayout());
 
         playerCardsPane = GuiCreator.createLayeredPane(
-                optimalDimension, Component.CENTER_ALIGNMENT);
+            new Dimension(LayeredPane.DEFAULT_CARD_WIDTH, LayeredPane.DEFAULT_CARD_HEIGHT),
+            Component.CENTER_ALIGNMENT);
 
         playerPointsPanel = new JPanel();
         playerPointsPanel.add(new JLabel(resBundle.getString("total-pts-player")));
@@ -190,7 +184,7 @@ public class Application extends JFrame {
         playerPointsPanel.add(playerTotalPtsLabel);
 
         playersPanel.add(playerCardsPane, new GBConstraints(0, 0, GridBagConstraints.BOTH));
-        playersPanel.add(playerPointsPanel, new GBConstraints(0, 1, GridBagConstraints.BOTH));
+        playersPanel.add(playerPointsPanel, new GBConstraints(0, 1, GridBagConstraints.NONE));
 
         // Adding all the elements from above to the game desk panel:
 
@@ -205,11 +199,13 @@ public class Application extends JFrame {
 
         // First (upper) sub-panel for the component:
 
-        cardDeckPanel = GuiCreator.createPanel(new GridBagLayout());
+        gameLogPanel = GuiCreator.createPanel(new GridBagLayout(), BorderFactory.createTitledBorder("Game log"));
 
-        // .. game history
-
-        cardDeckPanel.add(new JLabel("Продам гараж"));
+//        gameLogArea = GuiCreator.createTextArea(
+//                "Hello world! My name is Artem Piskarev! I am developer of this app!",
+//                true, false, false);
+//
+//        gameLogPanel.add(gameLogArea, new GBConstraints(0, 0, GridBagConstraints.BOTH));
 
         // Second (lower) sub-panel for the component:
 
@@ -261,7 +257,7 @@ public class Application extends JFrame {
 
         // Adding the sub-panels to the main panel:
 
-        controlsPanel.add(cardDeckPanel);
+        controlsPanel.add(gameLogPanel);
         controlsPanel.add(controlButtonsPanel);
     }
 
@@ -274,7 +270,7 @@ public class Application extends JFrame {
         JLabel pictureLabel = new JLabel(new ImageIcon("resources/favicon.png"), JLabel.CENTER);
 
         initLaunchButton = new JButton(resBundle.getString("launch-game"));
-        initLaunchButton.setActionCommand(Controller.ButtonClickListener.LAUNCH_APP);
+        initLaunchButton.setActionCommand(Controller.ButtonClickListener.NEW_GAME);
 
         initExitButton = new JButton(resBundle.getString("exit"));
         initExitButton.setActionCommand(Controller.ButtonClickListener.EXIT_GAME);
@@ -299,12 +295,12 @@ public class Application extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
 
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1.0;
+        gbc.weightx = 0.7;
         gbc.weighty = 1.0;
 
         mainPanel.add(gameDeskPanel, gbc);
 
-        gbc.weightx = 0.2;
+        gbc.weightx = 0.3;
         gbc.gridx = 1;
 
         mainPanel.add(controlsPanel, gbc);
