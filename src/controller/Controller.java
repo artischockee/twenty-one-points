@@ -5,6 +5,7 @@ import view.Application;
 import view.LayeredPane;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
 
@@ -23,7 +24,6 @@ public class Controller {
         public static final String NEW_GAME = "NEW_GAME";
         public static final String EXIT_GAME = "EXIT_GAME";
         public static final String EXIT_GAME_NO_DIALOG = "EXIT_GAME_NO_DIALOG";
-        public static final String LAUNCH_APP = "LAUNCH_APP";
         public static final String GET_CARD = "GET_CARD";
         public static final String PASS_ROUND = "PASS_ROUND";
         public static final String HOW_TO_PLAY = "HOW_TO_PLAY";
@@ -37,7 +37,7 @@ public class Controller {
             return new ImageIcon("resources/cards/" + cardName + cardSuit + ".png");
         }
 
-        private void pushCardToPane(LayeredPane targetPane, Vector<Card> targetDeck) {
+        private void pushCardToDeck(LayeredPane targetPane, Vector<Card> targetDeck) {
             if (model.isCardDeckEmpty()) {
                 view.showEmptyDeckWarningDialog();
                 return;
@@ -51,21 +51,27 @@ public class Controller {
 
             ImageIcon cardImage = getCardImage(card);
             JLabel label = new JLabel(cardImage);
-            label.setBounds(
-                    layerBoundX, layerBoundY,
-                    cardImage.getIconWidth(), cardImage.getIconHeight());
+            label.setBounds(layerBoundX, layerBoundY,
+                cardImage.getIconWidth(), cardImage.getIconHeight());
 
             targetDeck.add(card);
 
             targetPane.add(label, Integer.valueOf(layerPosition));
             targetPane.setLayerPosition(++layerPosition);
             targetPane.setBoundX(layerBoundX + LayeredPane.OFFSET);
+
+            // Crutches and bicycles:
+            if (targetPane.getWidth() > cardImage.getIconWidth() + 10)
+                targetPane.setPreferredSize(new Dimension(
+                    targetPane.getWidth() + LayeredPane.OFFSET,
+                    LayeredPane.DEFAULT_CARD_HEIGHT));
         }
 
         private void invokeGameRoutine() {
             if (view.containsInitPanel())
                 view.launchApplication();
 
+            // TODO: 4/25/18 Eliminate instant asking about new game in some situations
             if (model.isRun()) {
                 int response = view.showNewGameDialog();
 
@@ -83,13 +89,13 @@ public class Controller {
 
             model.run();
 
-            this.pushCardToPane(
-                    view.getDealerPane(),
-                    model.getCardPlayer(0).getCardDeck());
+            this.pushCardToDeck(
+                view.getDealerCardsPane(),
+                model.getCardPlayer(0).getCardDeck());
 
-            this.pushCardToPane(
-                    view.getPlayerPane(),
-                    model.getCardPlayer(1).getCardDeck());
+            this.pushCardToDeck(
+                view.getPlayerCardsPane(),
+                model.getCardPlayer(1).getCardDeck());
 
             this.refreshDynamicFields();
 
@@ -175,12 +181,12 @@ public class Controller {
         private void addCardFromDeck(int playerIndex) {
             // lame logic (temporarily):
             if (playerIndex == 0)
-                pushCardToPane(
-                    view.getDealerPane(),
+                pushCardToDeck(
+                    view.getDealerCardsPane(),
                     model.getCardPlayer(playerIndex).getCardDeck());
             else
-                pushCardToPane(
-                    view.getPlayerPane(),
+                pushCardToDeck(
+                    view.getPlayerCardsPane(),
                     model.getCardPlayer(playerIndex).getCardDeck());
 
             refreshDynamicFields();
@@ -212,9 +218,6 @@ public class Controller {
                     break;
                 case EXIT_GAME_NO_DIALOG:
                     System.exit(0);
-                    break;
-                case LAUNCH_APP:
-                    view.launchApplication();
                     break;
                 case GET_CARD:
                     addCardFromDeck(1);
