@@ -3,45 +3,30 @@ package model;
 import java.util.Random;
 
 public class Computer extends CardPlayer {
-    // Attributes ::
-
-    private static int _computerIndex;
+    private static int computerIndex = 0;
 
     // These attributes impact on computer's decisions
-    private static final Random _random;
-    private static final int _maxPossibility = 100;
-    private static final int[] _possibilityPercentages = { 95, 80, 40 };
-
-    // Static fields initialization ::
-
-    static {
-        _computerIndex = 0;
-        _random = new Random();
-    }
-
-    // Constructor ::
+    private static final Random RANDOM = new Random();
+    private static final int MAX_POSSIBILITY = 100;
+    private static final int[] POSSIBILITY_PERCENTAGES = { 98, 86, 58 };
 
     Computer() {
-        super("Computer " + ++_computerIndex);
+        super("Computer " + ++computerIndex);
     }
 
-    // Methods ::
-
     static void resetPlayerIndex() {
-        _computerIndex = 0;
+        computerIndex = 0;
     }
 
     private void calculatePossibility(double percentage) {
-        int possibility = _random.nextInt(_maxPossibility + 1);
+        int possibility = RANDOM.nextInt(MAX_POSSIBILITY + 1);
         if (possibility > percentage)
             this.setPass(true);
     }
 
-    // Overridden methods ::
-
     @Override
     public int getPlayerIndex() {
-        return _computerIndex;
+        return computerIndex;
     }
 
     @Override
@@ -74,10 +59,10 @@ public class Computer extends CardPlayer {
         };
 
         if (pointsAmount <= breakpoints[0])
-            this.calculatePossibility(_possibilityPercentages[0]);
+            this.calculatePossibility(POSSIBILITY_PERCENTAGES[0]);
         else if (pointsAmount <= breakpoints[1])
-            this.calculatePossibility(_possibilityPercentages[1]);
+            this.calculatePossibility(POSSIBILITY_PERCENTAGES[1]);
         else if (pointsAmount <= breakpoints[2])
-            this.calculatePossibility(_possibilityPercentages[2]);
+            this.calculatePossibility(POSSIBILITY_PERCENTAGES[2]);
     }
 }

@@ -3,71 +3,69 @@ package model;
 import java.util.Vector;
 
 public abstract class CardPlayer {
-    private Vector<Card> _cardDeck;
-    private String _playerName;
+    private Vector<Card> cardDeck;
+    private String playerName;
 
-    private boolean _isDealer;
-    private boolean _hasPassed;
-    private boolean _hasExceeded;
-    private boolean _hasWon;
-
+    private boolean isDealer;
+    private boolean hasPassed;
+    private boolean hasExceeded;
+    private boolean hasWon;
 
     CardPlayer(String playerName) {
         if (playerName == null || playerName.isEmpty())
-            _playerName = this.getClass().getName();
+            this.playerName = this.getClass().getName();
 
-        _cardDeck = new Vector<>();
-        _playerName = playerName;
-        _isDealer = _hasPassed = _hasExceeded = _hasWon = false;
+        cardDeck = new Vector<>();
+        this.playerName = playerName;
+        isDealer = hasPassed = hasExceeded = hasWon = false;
     }
 
-
     public Vector<Card> getCardDeck() {
-        return _cardDeck;
+        return cardDeck;
     }
 
     public int getPointsAmount() {
         int pointsAmount = 0;
-        for (Card card : _cardDeck)
+        for (Card card : cardDeck)
             pointsAmount += card.getCardWeight();
 
         return pointsAmount;
     }
 
     public String getPlayerName() {
-        return _playerName;
+        return playerName;
     }
 
     public boolean isDealer() {
-        return _isDealer;
+        return isDealer;
     }
 
     void setDealer(boolean state) {
-        _isDealer = state;
+        isDealer = state;
     }
 
     public boolean hasPassed() {
-        return _hasPassed;
+        return hasPassed;
     }
 
     void setPass(boolean state) {
-        _hasPassed = state;
+        hasPassed = state;
     }
 
     public boolean hasExceeded() {
-        return _hasExceeded;
+        return hasExceeded;
     }
 
     void setExceed(boolean state) {
-        _hasExceeded = state;
+        hasExceeded = state;
     }
 
     public boolean hasWon() {
-        return _hasWon;
+        return hasWon;
     }
 
     void setWin(boolean state) {
-        _hasWon = state;
+        hasWon = state;
     }
 
     public abstract int getPlayerIndex();

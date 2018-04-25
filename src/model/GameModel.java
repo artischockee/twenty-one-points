@@ -6,26 +6,30 @@ public class GameModel {
     public static final int DECK_SIZE = 36;
     public static final int MAX_SCORE = 21;
     public static final int MAX_DEALER_TOTAL = 17;
+    public static final int MAX_WEIGHT;
+    public static final int MIN_WEIGHT;
 
-    public static final int MAX_WEIGHT = Collections.max(
+    static {
+        MAX_WEIGHT = Collections.max(
             CardDeckCreator.getWeights21(),
-            Comparator.comparingInt(Integer::intValue));
+            Comparator.comparingInt(Integer::intValue)
+        );
 
-    public static final int MIN_WEIGHT = Collections.min(
+        MIN_WEIGHT = Collections.min(
             CardDeckCreator.getWeights21(),
-            Comparator.comparingInt(Integer::intValue));
+            Comparator.comparingInt(Integer::intValue)
+        );
+    }
 
     private Stack<Card> cardDeck;
     private Vector<CardPlayer> cardPlayers;
     private boolean isRun;
-
 
     public GameModel() throws IllegalArgumentException {
         cardDeck = CardDeckCreator.createDeck(DECK_SIZE);
         cardPlayers = new Vector<>();
         isRun = false;
     }
-
 
     public Card getCardFromCardDeck() throws EmptyStackException {
         if (cardDeck.isEmpty())
@@ -61,7 +65,6 @@ public class GameModel {
     public boolean isRun() {
         return isRun;
     }
-
 
     public void reload() {
         cardDeck = CardDeckCreator.createDeck(DECK_SIZE);

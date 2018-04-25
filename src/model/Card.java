@@ -64,24 +64,24 @@ enum CardName {
 }
 
 public class Card {
-    private final Suit _suit;
-    private final CardName _cardName;
-    private int _cardWeight;
+    private final Suit suit;
+    private final CardName cardName;
+    private int cardWeight;
 
     public String getSuitUnicodeSymbol() {
-        return _suit.getUnicodeSymbol();
+        return suit.getUnicodeSymbol();
     }
 
     public String getSuitShortNotation() {
-        return _suit.getShortNotation();
+        return suit.getShortNotation();
     }
 
     public String getCardNameSymbol() {
-        return _cardName.getSymbol();
+        return cardName.getSymbol();
     }
 
     public int getCardWeight() {
-        return _cardWeight;
+        return cardWeight;
     }
 
     Card(Suit suit, CardName cardName, int cardWeight) throws NullPointerException, IllegalArgumentException {
@@ -94,8 +94,8 @@ public class Card {
             throw new IllegalArgumentException("Error in argument 'cardWeight': negative value.");
         // TODO: 4/6/18 here should probably be another arguments checking
 
-        _suit = suit;
-        _cardName = cardName;
-        _cardWeight = cardWeight;
+        this.suit = suit;
+        this.cardName = cardName;
+        this.cardWeight = cardWeight;
     }
 }

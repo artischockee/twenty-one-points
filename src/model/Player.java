@@ -1,33 +1,19 @@
 package model;
 
 public class Player extends CardPlayer {
-    // Attributes ::
-
-    private static int _playerIndex;
-
-    // Static fields initialization ::
-
-    static {
-        _playerIndex = 0;
-    }
-
-    // Constructor ::
+    private static int playerIndex = 0;
 
     Player() {
-        super("Player " + ++_playerIndex);
+        super("Player " + ++playerIndex);
     }
-
-    // Methods ::
 
     static void resetPlayerIndex() {
-        _playerIndex = 0;
+        playerIndex = 0;
     }
-
-    // Overridden methods ::
 
     @Override
     public int getPlayerIndex() {
-        return _playerIndex;
+        return playerIndex;
     }
 
     @Override
