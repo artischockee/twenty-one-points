@@ -12,12 +12,8 @@ The main difference between original blackjack and "twenty-one points" (i.e. rus
 Because of that, the cards like Jack (J), Queen (Q) and King (K) have their weight not 10, but 2, 3 and 4 accordingly. The Ace (A) has his total weight of 11. Another cards have their weight by the numbering.
 
 ## Goals
-- [x] Write basic Model's logic
-- [x] Make an interaction for players's table
-- [x] Unite the Model and the View using Controller
 - [x] Add the i18n to the application (partially done, language can't be changed at runtime)
-- [ ] Add a functional of choosing the game settings before play
-- [ ] Add a text field for game history
+- [ ] Add a game customization (i.e. settings)
 - [ ] Add a GUI support for multi-player (on one machine)
 
 ## Disclaimer
