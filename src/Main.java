@@ -14,10 +14,12 @@ public class Main {
             e.printStackTrace();
         }
 
+        Locale eng = new Locale("en", "US");
+        Locale rus = new Locale("ru", "RU");
+
         SwingUtilities.invokeLater(() -> {
             try {
-                Application view = new Application(new Locale("en", "US"));
-//                    Application view = new Application(new Locale("ru", "RU"));
+                Application view = new Application(eng);
                 new Controller(new GameModel(), view);
 
                 view.setVisible(true);
