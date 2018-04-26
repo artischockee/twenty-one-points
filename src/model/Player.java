@@ -12,11 +12,6 @@ public class Player extends CardPlayer {
     }
 
     @Override
-    public int getPlayerIndex() {
-        return playerIndex;
-    }
-
-    @Override
     public void analyzeTurn() {
         int pointsAmount = this.getPointsAmount();
 
