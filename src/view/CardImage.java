@@ -1,11 +1,14 @@
 package view;
 
+import model.Card;
+
+import javax.swing.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-class CardImage {
+public class CardImage {
     private static int cardWidth;
     private static int cardHeight;
     private static int offset;
@@ -50,5 +53,12 @@ class CardImage {
 
     static int getOffset() {
         return offset;
+    }
+
+    public static ImageIcon getCardImage(Card card) {
+        String cardName = card.getCardNameSymbol();
+        String cardSuit = card.getSuitShortNotation();
+
+        return new ImageIcon("resources/cards/" + cardName + cardSuit + ".png");
     }
 }
