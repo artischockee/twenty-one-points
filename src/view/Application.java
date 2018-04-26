@@ -336,8 +336,8 @@ public class Application extends JFrame {
 
     public int showLoseGameDialog(String loserName) {
         Object[] options = {
-                dialogs.getString("common-play"),
-                dialogs.getString("common-quit")
+            dialogs.getString("common-play"),
+            dialogs.getString("common-quit")
         };
 
         return JOptionPane.showOptionDialog(this,
@@ -346,14 +346,14 @@ public class Application extends JFrame {
             JOptionPane.YES_NO_OPTION,
             JOptionPane.INFORMATION_MESSAGE,
             null,
-            options, options[1]
+            options, options[0]
         );
     }
 
     public int showExitDialog() {
         return JOptionPane.showConfirmDialog(this,
             dialogs.getString("exit-1"),
-                dialogs.getString("exit-2"),
+            dialogs.getString("exit-2"),
             JOptionPane.YES_NO_OPTION,
             JOptionPane.QUESTION_MESSAGE
         );
@@ -383,6 +383,40 @@ public class Application extends JFrame {
             dialogs.getString("empty-deck-2"),
             JOptionPane.WARNING_MESSAGE
         );
+    }
+
+    public void showComputerPassedDialog(String computerName) {
+        JOptionPane.showMessageDialog(this,
+            computerName + " " + dialogs.getString("computer-passed")
+        );
+    }
+
+    public void showComputerExceededDialog(String computerName) {
+        JOptionPane.showMessageDialog(this,
+            computerName + " " + dialogs.getString("computer-exceeded")
+        );
+    }
+
+    public void showComputerWinDialog(String computerName) {
+        JOptionPane.showMessageDialog(this,
+            computerName + " " + dialogs.getString("computer-won")
+        );
+    }
+
+    public void showWinnerDialog(String playerName, String pointsAmount) {
+        JOptionPane.showMessageDialog(this,
+            playerName + " " + dialogs.getString("winner-1") + " "
+                + pointsAmount + " " + dialogs.getString("winner-2"),
+                dialogs.getString("winner-3"),
+            JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+
+    public void showNoWinnersDialog() {
+        JOptionPane.showMessageDialog(this,
+            dialogs.getString("no-winners-1"),
+            dialogs.getString("no-winners-2"),
+            JOptionPane.INFORMATION_MESSAGE);
     }
 
     // ActionListeners:
