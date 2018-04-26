@@ -4,6 +4,7 @@ import model.Card;
 import model.CardPlayer;
 import model.GameModel;
 import view.Application;
+import view.CardImage;
 import view.LayeredPane;
 
 import javax.swing.*;
@@ -31,14 +32,6 @@ public class Controller {
         public static final String HOW_TO_PLAY = "HOW_TO_PLAY";
         public static final String ABOUT = "ABOUT";
 
-        // TODO: 4/25/18 Replace it from here
-        private ImageIcon getCardImage(Card card) {
-            String cardName = card.getCardNameSymbol();
-            String cardSuit = card.getSuitShortNotation();
-
-            return new ImageIcon("resources/cards/" + cardName + cardSuit + ".png");
-        }
-
         private void pushCardToDeck(LayeredPane targetPane, Vector<Card> targetDeck) {
             if (model.isCardDeckEmpty()) {
                 view.showEmptyDeckWarningDialog();
@@ -46,8 +39,7 @@ public class Controller {
             }
 
             Card card = model.getCardFromCardDeck();
-
-            ImageIcon cardImage = getCardImage(card);
+            ImageIcon cardImage = CardImage.getCardImage(card);
 
             int layerBoundX = targetPane.getBoundX();
             int layerBoundY = targetPane.getBoundY();
@@ -150,7 +142,7 @@ public class Controller {
         }
 
         private void checkComputerCondition(CardPlayer computer) {
-            Timer timer = new Timer(800, null);
+            Timer timer = new Timer(650, null);
 
             timer.addActionListener(actionEvent -> {
                 computer.analyzeTurn();
@@ -159,14 +151,18 @@ public class Controller {
                     timer.stop();
 
                     if (computer.hasPassed())
-                        JOptionPane.showMessageDialog(view, computer.getPlayerName() + " has passed.");
+                        view.showComputerPassedDialog(computer.getPlayerName());
+
                     else if (computer.hasExceeded())
-                        JOptionPane.showMessageDialog(view, computer.getPlayerName() + " has exceeded the points limit.");
+                        view.showComputerExceededDialog(computer.getPlayerName());
+
                     else if (computer.hasWon())
-                        JOptionPane.showMessageDialog(view, computer.getPlayerName() + " has won!");
+                        view.showComputerWinDialog(computer.getPlayerName());
                 }
                 else
                     addCardFromDeck(0);
+
+                getGameResults();
             });
 
             timer.start();
@@ -182,6 +178,8 @@ public class Controller {
                 exceedDialog(cardPlayer);
             else if (cardPlayer.hasWon())
                 winDialog(cardPlayer);
+
+            getGameResults();
         }
 
         private void addCardFromDeck(int playerIndex) {
@@ -198,17 +196,19 @@ public class Controller {
             refreshDynamicFields();
         }
 
-        private void getPlayersTable() {
-            Vector<String> table = new Vector<>();
+        private void getGameResults() {
+            if (!model.isAllPlayersFinished())
+                return;
 
-            for (CardPlayer cardPlayer : model.getCardPlayers()) {
-                String message = cardPlayer.isDealer()
-                        ? "[Dealer] " + cardPlayer.getPlayerName()
-                        : cardPlayer.getPlayerName();
-                message = message + ": " + cardPlayer.getPointsAmount();
-
-                table.add(message);
+            model.checkWinners();
+            if (model.winnersAmount() == 0) {
+                view.showNoWinnersDialog();
+                return;
             }
+
+            model.getWinners().forEach(cardPlayer ->
+                view.showWinnerDialog(cardPlayer.getPlayerName(), Integer.toString(cardPlayer.getPointsAmount()))
+            );
         }
 
         @Override
@@ -231,6 +231,7 @@ public class Controller {
                     break;
                 case PASS_ROUND:
                     view.switchInteractButtons(false);
+                    model.getCardPlayer(1).setPass(true);
                     checkComputerCondition(model.getCardPlayer(0));
                     break;
                 case HOW_TO_PLAY:
