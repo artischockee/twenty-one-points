@@ -48,7 +48,7 @@ public abstract class CardPlayer {
         return hasPassed;
     }
 
-    void setPass(boolean state) {
+    public void setPass(boolean state) {
         hasPassed = state;
     }
 
@@ -68,7 +68,9 @@ public abstract class CardPlayer {
         hasWon = state;
     }
 
-    public abstract int getPlayerIndex();
+    public boolean hasFinished() {
+        return hasExceeded || hasPassed || hasWon;
+    }
 
     // TODO: 4/14/18 to be renamed
     public abstract void analyzeTurn();
