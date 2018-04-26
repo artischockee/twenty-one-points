@@ -1,6 +1,7 @@
 package model;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class GameModel {
     public static final int DECK_SIZE = 36;
@@ -77,6 +78,14 @@ public class GameModel {
         Player.resetPlayerIndex();
     }
 
+    public long winnersAmount() {
+        return getWinners().count();
+    }
+
+    public Stream<CardPlayer> getWinners() {
+        return cardPlayers.stream().filter(CardPlayer::hasWon);
+    }
+
     public void shuffleDeck() {
         Collections.shuffle(cardDeck);
     }
@@ -91,5 +100,27 @@ public class GameModel {
         shuffleDeck();
         appendPlayers();
         isRun = true;
+    }
+
+    public boolean isAllPlayersFinished() {
+        for (CardPlayer cardPlayer : cardPlayers)
+            if (!cardPlayer.hasFinished())
+                return false;
+
+        return true;
+    }
+
+    public void checkWinners() throws NullPointerException {
+        CardPlayer dealer = cardPlayers.stream()
+            .filter(CardPlayer::isDealer)
+            .findFirst().orElseThrow(NullPointerException::new);
+
+        for (CardPlayer cardPlayer : cardPlayers)
+            if (!cardPlayer.isDealer() && !cardPlayer.hasWon() && !cardPlayer.hasExceeded())
+                if (dealer.hasExceeded()
+                    || cardPlayer.getPointsAmount() > dealer.getPointsAmount())
+                    cardPlayer.setWin(true);
+                else if (dealer.getPointsAmount() > cardPlayer.getPointsAmount())
+                    dealer.setWin(true);
     }
 }
