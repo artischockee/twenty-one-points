@@ -271,7 +271,8 @@ public class Application extends JFrame {
         JLabel greetingsLabel = new JLabel(resBundle.getString("common-greetings"), JLabel.CENTER);
         greetingsLabel.setFont(greetingsLabel.getFont().deriveFont(16.0f));
 
-        JLabel pictureLabel = new JLabel(new ImageIcon("resources/favicon.png"), JLabel.CENTER);
+        Image image = appIcon.getScaledInstance(256, 256, Image.SCALE_SMOOTH);
+        JLabel pictureLabel = new JLabel(new ImageIcon(image), JLabel.CENTER);
 
         initLaunchButton = new JButton(resBundle.getString("common-launch-game"));
         initLaunchButton.setActionCommand(Controller.ButtonClickListener.NEW_GAME);
