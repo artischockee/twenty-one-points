@@ -4,16 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 
 public class LayeredPane extends JLayeredPane {
-    public static final int OFFSET = 30;
+    public static final int OFFSET = CardImage.getOffset();
     public static final Dimension DEFAULT_DIMENSION;
-    private static final int DEFAULT_CARD_WIDTH = 84;   // these fields should probably lie
-    private static final int DEFAULT_CARD_HEIGHT = 128; // in Card class, but who knows..
 
     private int boundx;
     private int boundy;
 
     static {
-        DEFAULT_DIMENSION = new Dimension(DEFAULT_CARD_WIDTH, DEFAULT_CARD_HEIGHT);
+        DEFAULT_DIMENSION = new Dimension(
+            CardImage.getCardWidth(),
+            CardImage.getCardHeight()
+        );
     }
 
     LayeredPane() {
@@ -39,10 +40,13 @@ public class LayeredPane extends JLayeredPane {
     }
 
     public void increaseWidth() {
-        this.setPreferredSize(new Dimension(this.getWidth() + OFFSET, DEFAULT_CARD_HEIGHT));
+        this.setPreferredSize(new Dimension(
+            this.getWidth() + OFFSET,
+            (int) DEFAULT_DIMENSION.getHeight()
+        ));
     }
 
-    public void reset() {
+    void reset() {
         this.removeAll();
         this.setPreferredSize(DEFAULT_DIMENSION);
         this.revalidate();
