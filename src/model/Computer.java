@@ -25,23 +25,25 @@ public class Computer extends CardPlayer {
     }
 
     @Override
-    public int getPlayerIndex() {
-        return computerIndex;
-    }
-
-    @Override
     public void analyzeTurn() {
         int pointsAmount = this.getPointsAmount();
 
-        if (pointsAmount > GameModel.MAX_SCORE)
+        if (pointsAmount > GameModel.MAX_SCORE) {
             this.setExceed(true);
-        else if (pointsAmount == GameModel.MAX_SCORE)
+            return;
+        }
+        else if (pointsAmount == GameModel.MAX_SCORE) {
             this.setWin(true);
+            return;
+        }
 
-        if (this.isDealer() && pointsAmount >= GameModel.MAX_DEALER_TOTAL)
+        if (this.isDealer() && pointsAmount >= GameModel.MAX_DEALER_TOTAL) {
             this.setPass(true);
+            return;
+        }
 
         // Below is the main decision determination:
+        // TODO: 4/26/18 Improve the computer's logic
 
         int upperBound = GameModel.MAX_SCORE - GameModel.MIN_WEIGHT + 1;
         int lowerBound = GameModel.MAX_SCORE - GameModel.MAX_WEIGHT;
