@@ -103,6 +103,10 @@ public class Controller {
             view.getPlayerTotalPtsLabel().setText(
                 Integer.toString(model.getCardPlayer(1).getPointsAmount())
             );
+
+            view.getCardDeckSizeLabel().setText(
+                Integer.toString(model.getCardDeckSize())
+            );
         }
 
         // Apparently, this method is used here temporarily (may be it's not)
