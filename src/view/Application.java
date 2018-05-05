@@ -42,7 +42,8 @@ public class Application extends JFrame {
     private JLabel playerTotalPtsLabel;
 
     // Elements of the controlsPanel (top):
-    private JPanel gameLogPanel;
+    private JPanel cardDeckPanel;
+    private JLabel cardDeckSizeLabel;
 
     // Elements of the controlsPanel (bottom):
     private JButton playButton;
@@ -92,6 +93,10 @@ public class Application extends JFrame {
 
     public JLabel getDealerTotalPtsLabel() {
         return dealerTotalPtsLabel;
+    }
+
+    public JLabel getCardDeckSizeLabel() {
+        return cardDeckSizeLabel;
     }
 
     public boolean interactButtonsAreEnabled() {
@@ -205,14 +210,39 @@ public class Application extends JFrame {
         gameDeskPanel.add(playerPanel);
     }
 
-    private void assembleControlsPanel() {
+    private void assembleControlsPanel() throws IOException {
         // Main panel:
 
         controlsPanel = GuiCreator.createPanel(new GridLayout(2, 1));
 
         // Sub-panel (top):
 
-        gameLogPanel = GuiCreator.createPanel(new GridBagLayout());
+        cardDeckPanel = GuiCreator.createPanel(new GridBagLayout());
+
+        Image image = ImageIO.read(new File("resources/cards-back/blue.png"));
+        image = image.getScaledInstance(128, 192, Image.SCALE_SMOOTH);
+
+        JLabel cardDeckImageLabel = new JLabel(new ImageIcon(image), JLabel.CENTER);
+
+        JLabel cardDeckSizeStaticLabel = new JLabel("Cards:", JLabel.RIGHT);
+
+        cardDeckSizeLabel = new JLabel("TEXT", JLabel.LEFT);
+
+        GBConstraints gbc = new GBConstraints();
+
+        gbc.gridwidth = 2;
+
+        cardDeckPanel.add(cardDeckImageLabel, gbc);
+
+        gbc.gridwidth = 1;
+        gbc.gridy = 1;
+        gbc.insets = new Insets(4, 0, 0, 0);
+
+        cardDeckPanel.add(cardDeckSizeStaticLabel, gbc);
+
+        gbc.gridx = 1;
+
+        cardDeckPanel.add(cardDeckSizeLabel, gbc);
 
         // Sub-panel (bottom):
 
@@ -234,34 +264,34 @@ public class Application extends JFrame {
 
         // Placing the items with GridBagConstraints:
 
-        GBConstraints gbc = new GBConstraints(GridBagConstraints.HORIZONTAL);
+        gbc = new GBConstraints(GridBagConstraints.HORIZONTAL);
 
         gbc.ipady = 30;
         gbc.gridwidth = 2;
 
         controlButtonsPanel.add(hitButton, gbc);
 
-        gbc.ipady = 0;
+        gbc.ipady = 10;
         gbc.gridy = 1;
-        gbc.insets = new Insets(4, 0, 0, 0);
+        gbc.insets = new Insets(12, 0, 0, 0);
 
         controlButtonsPanel.add(standButton, gbc);
 
         gbc.gridy = 2;
         gbc.gridwidth = 1;
-        gbc.insets = new Insets(8, 0, 0, 2);
+        gbc.insets = new Insets(12, 0, 0, 2);
         gbc.ipadx = 30;
 
         controlButtonsPanel.add(playButton, gbc);
 
         gbc.gridx = 1;
-        gbc.insets = new Insets(8, 2, 0, 0);
+        gbc.insets = new Insets(12, 2, 0, 0);
 
         controlButtonsPanel.add(exitButton, gbc);
 
         // Adding the sub-panels to the main panel:
 
-        controlsPanel.add(gameLogPanel);
+        controlsPanel.add(cardDeckPanel);
         controlsPanel.add(controlButtonsPanel);
     }
 
